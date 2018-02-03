@@ -135,3 +135,18 @@ Das \term{Suffix-Array}\index{Suffix-Array} eines Strings lässt sich nun folgen
 \end{minipage}
 
 Mithilfe dieses Suffix-Arrays lassen sich später viele Suchprobleme in Linearzeit lösen. Beispielsweise ist die Suche nach dem längsten Substring, der (eventuell mit Überschneidung) zweimal im Text vorkommt, linear --- dafür muss nach Berechnung des Suffix-Arrays der längste String gefunden werden, der Präfix von zwei Strings im Suffix-Array ist (im Beispiel oben wäre das ``\emph{ana}'').
+
+\subsection{Suffix-Bäume}
+
+Noch anschaulicher, allerdings wesentlich platzverbrauchender, sind \term{Suffix-Bäume}\index{Suffix-Baum} von Strings. Sie sind formal der \emph{kompaktierte Trie der Suffixe} und lassen sich (wenn auch sehr kompliziert) in \( O(n) \) berechnen.
+
+\begin{minipage}{.65\textwidth}
+  Bevor wir den Suffix-Baum eines Strings bilden hängen wir hinten an den String noch einen Charakter dran, der nicht im Alphabet des Strings vorkommt. Das hat den Vorteil, dass anschließend alle Suffixe in einem Blatt des Baums enden.
+\end{minipage}
+\hfill
+\begin{minipage}{.35\textwidth}
+  \begin{figure}[H]
+    \includegraphics[width=.8\textwidth]{suffixTree}
+    \caption{Beispiel für den Suffix-Baum des Strings ``\emph{banana}''}
+  \end{figure}
+\end{minipage}
