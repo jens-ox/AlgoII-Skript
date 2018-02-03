@@ -1,0 +1,118 @@
+\chapter{Nichteuklidische Geometrie --- Hyperbolische Ebene}
+
+Die euklidische Geometrie verfolgt einen axiomatischen Zugang --- es ist beispielsweise nicht näher definiert, was ein Punkt ist. Genauso gibt es das Parallelen-Axiom, welches besagt, dass es zu einer gegebenen Gerade \( g \) und einem Punkt \( P \), der nicht auf dieser Geraden liegt, genau eine Gerade gibt, die parallel zu \( g \) ist und \( P \) beinhaltet. Es wurde lange versucht, das Parallelen-Axiom aus anderen Axiomen zu konstruieren, allerdings gelang das nicht. \\
+Um 1900 wurde von Poincaré und Klein die hyperbolische Ebene formalisiert.
+
+\begin{definition}[Hyperbolische Ebene]
+  Es sei \( H^2 \coloneqq \left \{ \left( x_1, x_2 \right) \in \R^2 : x_2 > 0 \right \} \) die obere Halbebene. Es seien
+  \begin{itemize}
+    \item \term{Punkte} die Elemente in \( H^2 \) und
+    \item \term{Geraden} die Halbkreise mit Zentrum auf der \( x_1 \)-Achse und die Parallelen zur \( x_2 \)-Achse.
+  \end{itemize}
+  Leicht lässt sich zeigen, dass es wie in der euklidischen Geometrie auf der hyperbolischen Ebene eine Gerade zwischen zwei beliebiegen Punkten gibt. Allerdings ist diese Gerade hier im Allgemeinen nicht eindeutig. Das Parallelen-Axiom gilt auf der hyperbolischen Ebene nicht, da hier zu gegebener Gerade \( g \) und Punkt \( P \) mehrere Geraden \( \widetilde{g_1}, \widetilde{g_2}, \dots \) gefunden werden können, sodass
+  \begin{equation*}
+    \widetilde{g_1} \cap g = \widetilde{g_2} \cap g = \cdots = \varnothing\text{.}
+  \end{equation*}
+\end{definition}
+
+\section{Von Gauß zu Riemann}
+
+Sei \( M \) eine \( m \)-dimensionale, differenzierbare Mannigfaltigkeit. Zu jedem \( p \in M \) definiert man abstrakt einen Tangentialraum \( T_p M \) wie folgt: \\
+Tangentialvektoren sind Äquivalenzklassen von differenzierbaren Kurven durch \( p \in M \). Genauer: Ist \( (U, \phi) \) eine Karte um \( p \) und \( c_1, c_2: (-\epsilon, \epsilon) \to M \) mit \( c_1(0) = c_2(0) = p \), so ist
+\begin{equation*}
+  c_1 \sim c_2 \Leftrightarrow \frac{\text{d}}{\text{d}t}\vert_{t = 0} \phi \circ c_1(t) = \frac{\text{d}}{\text{d}t}\vert_{t = 0} \phi \circ c_2(t)\text{.}
+\end{equation*}
+Man kann zeigen:
+\begin{itemize}
+  \item \( T_p M \) ist \( n \)-dimensionaler \( \R \)-Vektorraum.
+  \item \( T_p M \) ist unabhängig von \( (U, \phi) \).
+\end{itemize}
+
+\begin{definition}[Riemannsche Metrik]
+  Eine \term{Riemannsche Metrik} auf einer differenzierbaren Mannigfaltigkeit \( M \) ist eine Familie von Skalarprodukten \( \left\langle \cdot,\cdot \right\rangle_p \) auf \( T_p M \), die differenzierbar von \( p \) abhängt. \\
+  Dieses Konzept verallgemeinert die erste Fundamentalform von Flächen in \( \R^3 \) auf \( n \)-dimensionale Mannigfaltigkeiten\footnote{Weiteres hierzu in der Vorlesung ``Differentialgeometrie''}.
+\end{definition}
+
+\begin{example}[Einfache Beispiele Riemannscher Mannigfaltigkeiten \( (M, \left\langle \cdot,\cdot \right\rangle) \)]
+  \
+  \begin{enumerate}
+    \item \( M = U = \) offene Teilmenge von \( \R^n \). \\
+      Hier ist \( T_p M = T_p U = T_p \R^n \cong \R^n \). \\
+      Eine Riemannsche Metrik auf \( U \) ist gegeben durch eine Abbildung
+      \begin{align*}
+        g: U &\to \text{Sym}(n) = \text{ pos.\ definite, symmetrische } n \times n \text{-Matrizen} \\
+        (u_1, \dots, u_n) &\mapsto (g_{ij}(u_1, \dots, u_n))
+      \end{align*}
+
+    \item Spezialfall für \( n = 2 \): \\
+      \( U = \R^2 \), \( g_{ij}(x,y) = \left( \begin{smallmatrix}
+        1 & 0 \\ 0 & 1
+      \end{smallmatrix} \right) = \) konstant. \\
+      Das ist genau die euklidische Geometrie aus Kapitel 1. Das heißt, dass riemannsche Metriken die euklidische Geometrie verallgemeinern.
+
+    \item \( M = H^2 = \left \{ (x,y) \in \R^3 : y > 0 \right \} = \) obere Halbebene. \\
+      Hier ist \( g_{ij}(x,y) = \frac{\delta_{ij}}{y^2} \), also \( (g_{ij}(x,y)) = \left( \begin{smallmatrix}
+        \tfrac{1}{y^2} & 0 \\ 0 & \tfrac{1}{y^2}
+      \end{smallmatrix} \right) \).
+  \end{enumerate}
+\end{example}
+
+\begin{remark}[Wozu brauchen wir riemannsche Metriken?]
+  \ \\
+  Sei \( n = 2 \) und \( U \subset \R^2 \) offen. Für das Skalarprodukt von zwei Tangentialvektoren in \( T_{(u_1,u_2)}M \cong \R^2 \), \( a = (a_1, a_2) \) und \( b = (b_1,b_2) \) gilt:
+  \begin{align*}
+    g_{u_1 u_2}(a,b) &\coloneqq \left\langle a,b \right\rangle_{(u_1, u_2)} = \sum_{i,j = 1}^2 g_{ij}(u_1,u_2)a_i b_j \\
+     &= g_{11}(u_1, u_2)a_1 b_1 + 2g_{12}(u_1, u_2)a_1 b_2 + 2g_{12}(u_1, u_2)a_2b_1 + g_{22}(u_1,u_2)a_2 b_2
+  \end{align*}
+  Insbesondere sind dadurch Längen von und Winkel zwischen Tangentialvektoren definiert:
+  \begin{align*}
+    \left\Vert a \right\Vert_{(u_1, u_2)} &= \sqrt{g(u_1,u_2)(a,a)} = \sqrt{\sum_{i,j = 1}^n g_{ij}(u_1,u_2)(a_i,a_j)} \\
+    \cos \angle (a,b) &= \frac{g(u_1,u_2)(a,b)}{\left\Vert a \right\Vert_{(u_1,u_2)} \left\Vert b \right\Vert_{(u_1,u_2)}}
+  \end{align*}
+  Damit kann man wie in der Flächentheorie Längen von differenzierbaren Kurven, Flächeninhalt von Gebieten in \( U \) und allgemeiner alle Größen der inneren Geometrie für riemannsche Mannigfaltigkeiten verallgemeinern.
+\end{remark}
+
+\section{Ebene hyperbolische Geometrie}
+
+\begin{definition}[Hyperbolische Länge]
+  Sei \( H^2 = \left \{ (x,y) \in \R^2 : y > 0 \right \} = \left \{ z \in \C : \text{Im} z > 0 \right \} \) die obere Halbebene mit der hyperbolischen riemannschen Metrik \( g_{ij} = \left( \begin{smallmatrix}
+    \tfrac{1}{y^2} & 0 \\ 0 & \tfrac{1}{y^2}
+  \end{smallmatrix} \right) \). \\
+  Für eine differenzierbare Kurve 
+  \begin{align*}
+    c: [a,b] &\to H^2\text{,} \\
+    t &\mapsto c(t) = (x(t),y(t))
+  \end{align*}
+  definieren wir die \term{hyperbolische Länge}:
+  \begin{equation*}
+    L_h(c) \coloneqq \int_a^b \left\Vert c' \right\Vert_H \text{d}t = \int_a^b \frac{\sqrt{{x'(t)}^2 + {y'(t)}^2}}{y(t)}\text{.}
+  \end{equation*}
+  Alternativ in komplexer Schreibweise:
+  \begin{equation*}
+    c(t) \coloneqq z(t) = x(t) + \i y(t) \quad \text{mit} \quad L_h(c) = \int_a^b \frac{\left\vert z'(t) \right\vert}{\text{Im} z(t)}\text{d}t\text{.}
+  \end{equation*}
+\end{definition}
+
+\begin{example}
+  Sei \( c: [a,b] \ni t \mapsto (0,t) \in H^2 \) das Stück der imaginären Achse zwischen \( \i a \) und \( \i b \). Dann gilt:
+  \begin{equation*}
+    L_h(c) = \int_a^b \frac{\sqrt{{x'(t)}^2 + {y'(t)}^2}}{y(t)}\text{d}t = \int_a^b \frac{1}{t}\text{d}t = \ln b - \ln a\text{.}
+  \end{equation*}
+  \emph{Bemerkung}: Es gilt \( \lim_{\i a \to \infty}L_h(c) = \infty \).
+\end{example}
+
+Wie die euklidische Ebene hat auch die hyperbolische Ebene viele Isometrien: \\
+Betrachte dazu die spezielle lineare Gruppe \( \text{SL}(n,\R) \), also die Menge aller reellen \( 2 \times 2 \)-Metrizen mit Determinante \( 1 \), versehen mit der Matrizen-Multiplikation. \\
+
+\begin{definition}[Möbius-Transformation]
+  Für \( A = \left( \begin{smallmatrix}
+    a & b \\ c & d
+  \end{smallmatrix} \right) \in \text{SL}(n,\R) \) betrachten wir die \term{Möbius-Transformation}:
+  \begin{equation*}
+    T_A: H^2 \ni z \mapsto \frac{az + b}{cz + d} \in H^2\text{.}
+  \end{equation*}
+  \emph{Wohldefiniertheit}: Sei \( w = T_A(z) \). Es ist
+  \begin{equation*}
+    \text{Im}(w)
+  \end{equation*}
+\end{definition}

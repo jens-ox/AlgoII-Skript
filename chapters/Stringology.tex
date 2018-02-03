@@ -1,0 +1,137 @@
+\chapter{Stringology}
+
+\begin{tcolorbox}[colframe=black!3!white]
+  \textbf{Inhalt dieses Kapitels}:
+  \tcblower
+  \begin{itemize}
+    \item Strings sortieren
+    \item Patterns suchen
+    \item Datenkompression
+  \end{itemize}
+\end{tcolorbox}
+
+\section{Strings sortieren}\label{sec:stringSorting}
+
+Naive Sortierverfahren, wie sie aus der Vorlesung ``Algorithmen 1'' bekannt sind, sind beim Sortieren von Strings ineffizient, deswegen gibt es für das Sortieren von Strings andere Algorithmen. Ein solcher ist der \term{Multikey Quicksort}\label{def:multikeyQuicksort}\index{Multikey Quicksort}-Algorithmus:
+
+\begin{figure}[H]
+  \begin{pseudocode}
+    \textbf{\textsc{mkqSort}} (\( S \): String Seq, \( l : \N \)): String Seq \\
+    \textbf{assert} \( \forall e, e' \in S : e[1\dots l-1] = e'[1\dots l-1] \) \\
+    \textbf{if} \( \left\vert S \right\vert \leq 1 \) \textbf{then return} \( S \) \\
+    pick \( p \in S \) randomly \\
+    \textbf{return} concatenation of \\
+    \phantom{\quad} \textsc{mkqSort} (\( \langle e \in S : e[l] < p[l] \rangle, l \)), \\
+    \phantom{\quad} \textsc{mkqSort} (\( \langle e \in S : e[l] = p[l] \rangle, l+1 \)), \\
+    \phantom{\quad} \textsc{mkqSort} (\( \langle e \in S : e[l] > p[l] \rangle, l \))
+  \end{pseudocode}
+  \caption{Pseudocode-Implementierung des Multikey-Quicksort-Algorithmus}
+\end{figure}
+
+Dieser Algorithmus sortiert eine String-Sequenz und nimmt an, dass die ersten \( l-1 \) Buchstaben bereits sortiert wurden. \\
+Zuerst wird ein zufälliges Pivotelement gewählt. Danach wird die übergebene Sequenz an Strings wird in drei Teilsequenzen geteilt:
+\begin{enumerate}
+  \item Sequenz an Strings, deren \( l \)-ter Buchstabe kleiner ist als der \( l \)-te Buchstabe des Pivotelements.
+  \item Sequenz an Strings, deren \( l \)-ter Buchstabe derselbe ist wie der \( l \)-te Buchstabe des Pivotelements.
+  \item Sequenz an Strings, deren \( l \)-ter Buchstabe größer ist als der \( l \)-te Buchstabe des Pivotelements.
+\end{enumerate}
+Auf die erste und dritte Teilsequenz wird der Algorithmus nun rekursiv mit dem selben Parameter \( l \) ausgeführt, da die Buchstaben an der \( l \)-ten Position nicht übereinstimmen (müssen) --- auf die zweite Teilsequenz wird der Algorithmus rekursiv mit dem Parameter \( l+1 \) ausgeführt, weil hier die \( l \)-ten Buchstaben aller Wörter in der Sequenz gleich sind. \\
+Die Laufzeit des Algorithmus ist in \( O(\left\vert S \right\vert \log \left\vert S \right\vert + d) \), wobei \( d \) die Summe der eindeutigen Präfixe der Strings in \( S \) ist.
+
+\section{Pattern Matching}\label{sec:patternMatching}
+
+\emph{Hinweis}: In diesem Abschnitt sind Arrays \( 1 \)-basiert. \\
+
+In diesem Abschnitt wird es darum gehen, alle oder zumindest ein Vorkommen eines \term{Patterns}\index{Pattern} \( P = p_1\dots p_m \) in einem gegebenen \term{Text}\index{Text} \( T = t_1\dots t_n \) zu finden. Im Allgemeinen ist \( n \gg m \), also der Text wesentlich länger als das Pattern, das wir in ihm suchen. 
+
+\subsection{Naives Pattern Matching}
+Das naive Vorgehen ist, an jeder Position von \( T \) zu schauen, ob an dieser das gesuchte Pattern vorkommt. Offensichtlich ist dieser Algorithmus in \( O(nm) \), da im schlimmsten Fall für jede Position des Textes das gesamte Pattern durchlaufen werden muss. Dieser Algorithmus kann folgendermaßen implementiert werden:
+\begin{figure}[H]
+  \begin{pseudocode}
+    \textbf{\textsc{naivePatternMatch}} (\( P \), \( T \)) \\
+    \( i \),\( j \coloneqq 1 \) \\
+    \textbf{while} \( i \leq n-m+1 \) \\
+    \phantom{\quad} \textbf{while \( j \leq m \wedge t_{i+j-1} = p_j \)} \textbf{do} \( j \)++ \\
+    \phantom{\quad} \textbf{if \( j > m \)} \textbf{then return} ``\( P \) occurs at pos \( i \) in \( T \)'' \\
+    \phantom{\quad} \( i \)++ \\
+    \phantom{\quad} \( j \coloneqq 1 \)
+  \end{pseudocode}
+  \caption{Pseudocode-Implementierung des naiven Pattern-Matching-Algorithmus}
+\end{figure}
+
+\subsection{Knuth-Morris-Pratt}
+Ein anderer Algorithmus zum Finden von Patterns in einem gegebenen Text ist der \term{Knuth-Morris-Pratt-Algorithmus}\label{def:kmpAlgorithmus}\index{Knuth-Morris-Pratt-Algorithmus}. Dieser hat sogar optimale Laufzeit, nämlich \( O(n+m) \). \\
+Idee dieses Algorithmus ist es, das Pattern eleganter nach vorne zu verschieben, wenn es einen Mismatch zwischen Text und Pattern gibt. Hierfür brauchen wir ein Hilfswerkzeug: \\
+Für einen String \( S \) mit Länge \( k \) sei \( \alpha(S) \) die Länge des Längsten Präfixes von \( S_{1\dots k-1} \), das auch Suffix von \( S_{2\dots k} \) ist.\footnote{Wir lassen absichtlich bei Betrachtung des Präfixes den letzten und bei Betrachtung des Suffixes den ersten Buchstaben weg, damit \( \alpha(S) = 0 \) ist, wenn \( \left\vert S \right\vert = k = 1 \) ist.} 
+
+\begin{figure}[H]
+  \includegraphics[width=0.7\textwidth]{KMP}
+  \caption{Idee beim Verschieben des Patterns: \( \alpha \) wurde bereits gematcht. Früher als mit dem bereits gematchten Suffix kann das nächste Vorkommen von \( P \) nicht auftauchen, also kann mann \( P \) direkt um \( j - 1 - \alpha \) verschieben}
+\end{figure}
+
+Der Algorithmus besteht aus zwei Teilen:
+\begin{enumerate}
+  \item \textbf{Border-Array berechnen} (\( O(m) \)). Damit die oben erläuterten Verschiebungen nachher effizient durchgeführt werden können, berechnen wir für das leere Wort \emph{und} jeden Buchstaben in \( P \) einen \( \alpha \)-Wert. Diese Werte ergeben das \term{Border-Array}\label{def:borderArray}\index{Border-Array}:
+  \begin{minipage}{.55\textwidth}
+    \begin{equation*}
+      \text{border}[j] = \begin{cases}
+        -1\text{,} &\text{falls } j = 1 \\
+        \alpha(P_{1 \dots j-1})\text{,} &\text{sonst}
+      \end{cases}\text{.}
+    \end{equation*}
+  \end{minipage}
+  \hfill
+  \begin{minipage}{.35\textwidth}
+    \begin{figure}[H]
+      \includegraphics[width=.8\textwidth]{borderArray}
+      \caption{Beispiel für das Border-Array eines Patterns}
+    \end{figure}
+  \end{minipage}
+
+  \item \textbf{Pattern matchen} (\( O(n) \)). Nun verwenden wir das erstellte Border-Array, um Vorkommnisse von \( P \) in \( T \) zu finden. Wir starten sowohl im Text als auch im Pattern an Position 1 und fangen an zu matchen. Kommt es an Position \( 1 \leq j \leq m \) des Patterns zu einem Mismatch, so können wir \( P \) direkt um \( j - \text{border}[j] - 1 \) verschieben. In Pseudocode sieht das so aus:
+  \begin{pseudocode}
+    \textbf{\textsc{KMPMatch}} (P,T) \\
+    \( i,j \coloneqq 1 \) \\
+    \textbf{while} \( i \leq n - m + 1 \) \\
+    \phantom{\quad} \textbf{while} \( j \leq m \wedge t_{i+j-1} = p_j \) \textbf{do} \( j \)++ \\
+    \phantom{\quad} \textbf{if} \( j > m \) \textbf{then return} ``\( P \) occurs at pos \( i \) in \( T \) '' \\
+    \phantom{\quad} \( i \) += \( j - \text{border}[j] + 1 \) \\
+    \phantom{\quad} \( j \coloneqq \max\left \{ 1, \text{border}[j]+1 \right \} \)
+  \end{pseudocode}
+\end{enumerate}
+
+Eine Ausführung des Algorithmus kann also folgendermaßen aussehen:
+\begin{figure}[H]
+  \includegraphics[width=.6\textwidth]{kmpBeispiel}
+  \caption{Beispiel für das Verwenden des Knuth-Morris-Pratt-Algorithmus}
+\end{figure}
+
+\subsection{Suffix-Arrays}
+
+Im Folgenden werden Arrays wieder mit Position \( 0 \) beginnen. Wir verwenden desweiteren folgende Festlegungen:
+\begin{itemize}
+  \item Ein \term{String}\index{String} ist ein Array von Buchstaben,
+  \begin{equation*}
+    S[0\dots n) \coloneqq S[0\dots n-1] \coloneqq [S[0],\dots,S[n-1]]\text{.}
+  \end{equation*}
+  \item Das \term{Suffix}\index{Suffix} \( S_i \) sei der Substring \( S[i\dots n) \) von \( S \).
+  \item Wir setzen an das Ende jedes Strings ausreichend viele \term{Endmarkierungen}\index{Endmarkierung}: \( S[n] \coloneqq S[n+1] \coloneqq \cdots \coloneqq 0 \). \( 0 \) sei per Definition kleiner als alle anderen vorkommenden Zeichen.
+\end{itemize}
+
+Das \term{Suffix-Array}\index{Suffix-Array} eines Strings lässt sich nun folgendermaßen konstruieren:
+
+\begin{minipage}{.65\textwidth}
+  \begin{enumerate}
+    \item Bilde die Menge aller Suffixe \( S_i \) (\( i = 0,\dots,n-1 \)) des Strings.
+    \item Sortiere die Menge aller Suffixe des Strings (z.B. mit \hyperref[def:multikeyQuicksort]{Multikey Quicksort}).
+  \end{enumerate}
+\end{minipage}
+\hfill
+\begin{minipage}{.35\textwidth}
+  \begin{figure}[H]
+    \includegraphics[width=.8\textwidth]{suffixArray}
+    \caption{Beispiel für die Konstruktion des Suffix-Arrays des Strings ``\emph{banana}''}
+  \end{figure}
+\end{minipage}
+
+Mithilfe dieses Suffix-Arrays lassen sich später viele Suchprobleme in Linearzeit lösen. Beispielsweise ist die Suche nach dem längsten Substring, der (eventuell mit Überschneidung) zweimal im Text vorkommt, linear --- dafür muss nach Berechnung des Suffix-Arrays der längste String gefunden werden, der Präfix von zwei Strings im Suffix-Array ist (im Beispiel oben wäre das ``\emph{ana}'').

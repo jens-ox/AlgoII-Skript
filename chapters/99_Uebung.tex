@@ -1,0 +1,372 @@
+\chapter{Übungen}
+
+\section{2017-10-27}
+
+\begin{problem*}[1]
+  \emph{Zeigen Sie: $ (\R^2, d) $ mit $ d(x,y) = \vert (x_1-y_1)+(x_2-y_2) \vert $ ist pseudometrischer Raum.}
+  \begin{itemize}
+    \item \textbf{Positivität}. Zu zeigen: $ \forall x \in \R^2: d(x,x) = 0 $. \\
+      $ d(x,x) = \vert (x_1-x_1)+(x_2-x_2) \vert = \vert 0 \vert = 0 $.
+    \item \textbf{Symmetrie}. Zu zeigen: $ \forall x, y \in \R^2: d(x,y) = d(y,x) $. \\
+      $ d(x,y) = \vert (x_1-y_1)+(x_2-y_2) \vert = \vert (y_1-x_1)+(y_2-x_2) \vert = d(y,x) $.
+    \item \textbf{Dreiecksungleichung}. Zu zeigen: $ \forall x,y,z \in \R^2: d(x,z) \leq d(x,y) + d(y,z) $. \\
+      $ d(x,y) + d(y,z) = \vert (x_1-y_1)+(x_2-y_2) \vert + \vert (y_1-z_1)+(y_2-z_2) \vert \geq \vert (x_1-z_1) + (x_2 - z_2) \vert = d(x,z) $.
+  \end{itemize}
+\end{problem*}
+
+\begin{problem*}[2]
+  Gegeben:
+  \begin{itemize}
+    \item $ \Vert x \Vert_1 \coloneqq \sum_{i = 1}^n \vert x_i \vert $,
+    \item $ \Vert x \Vert_2 \coloneqq \sqrt{\sum_{i=1}^n x_i^2} $,
+    \item $ \Vert x \Vert_\infty \coloneqq \max_{i = 1,\dots,n}\vert x_i \vert $.
+  \end{itemize}
+  Wir zeigen, dass alle drei Normen sind. Dafür ist zu zeigen:
+  \begin{enumerate}
+     \item  \textbf{Positivität}: $ \Vert x \Vert \geq 0 \forall x $, $ x = 0 \Leftrightarrow \Vert x \Vert = 0 $.
+     \item \textbf{Sublinearität}: $ \forall x, y \in V: \Vert x + y \Vert \leq \Vert x \Vert + \Vert y \Vert $
+     \item \textbf{Homogenität}: $ \forall x \in V \forall \lambda \in \R: \Vert \lambda x \Vert = \vert \lambda \vert * \Vert x \Vert $.
+  \end{enumerate}
+  Positivität ist klar für alle drei. Homogenität ist auch arg simpel. \\
+  \textbf{Sublinearität}:
+  \begin{enumerate}
+    \item \begin{align*}
+      \Vert x + y \Vert_1 &= \sum_{i = 1}^n \vert x_i + y_i \vert \leq \sum_{i = 1}^n \vert x_i \vert + \vert y_i \vert \\
+        &= \Vert x \Vert_1 + \Vert y \Vert_1
+    \end{align*}
+    \item \begin{align*}
+      \Vert x + y \Vert^2_2 &= \langle x+y, x+y \rangle = \langle x, x \rangle + 2\langle x, y\rangle - \langle y, y \rangle \\
+        &\overset{\text{CSU}}{\leq} \Vert x \Vert_2^2 + 2 \Vert x \Vert_2 \Vert y \Vert_2 + \Vert y \Vert_2^2 = (\Vert x \Vert_2 + \Vert y \Vert_2)^2 \\
+        &\Rightarrow \Vert x +y \Vert_2 \leq \Vert x \Vert_2 + \Vert y \Vert_2
+    \end{align*}
+    \item \begin{align*}
+      \Vert x + y \Vert_\infty &= \max_{i = 1, \dots,n} \vert x_i + y_i \vert \leq \max_{i = 1, \dots, n}(\vert x_i \vert + \vert y_i \vert) \\
+        &\leq \max_{i = 1, \dots, n} \max_{j = 1, \dots, n}(\vert x_i \vert + \vert y_j \vert) = (\max_i \vert x_i \vert) + (\max_j \vert y_j \vert) \\
+        &= \Vert x \Vert_\infty + \Vert y \Vert_\infty
+    \end{align*}
+  \end{enumerate}
+\end{problem*}
+
+\begin{problem*}[3]
+  Sei $ (X, d) $ ein metrischer Raum, $ r_1, r_2 \in \R_{>0} $.
+  \begin{enumerate}
+    \item Beweise: 
+    \begin{enumerate}
+      \item Falls $ d(x, y) \geq r_1 + r_2 $, dann sind $ B_{r_1}(x) $, $ B_{r_2}(y) $ disjunkt. \\
+        \underline{Beweis}: Angenommen, $ \exists \ z \in B_{r_1}(x) \cap B_{r_2}(y) $. \\
+        Dann ist $ d(x,y) \leq d(x,z) + d(z,y) < r_1 + r_2 \quad \lightning \qed $ \\
+      \item Falls $ d(x,y) \leq r_1-r_2 $, so ist $ B_{r_2}(y) \subseteq B_{r_1}(x) $. \\
+      \underline{Beweis}: Angenommen, $ \exists \ z \in B_{r_2}(y) \setminus B_{r_1}(x) $. Dann ist
+      \begin{align*}
+        d(x,z) &\geq r_1 = (r_1 - r_2) + r_2 \\
+        &> d(x,y) + d(z, y) \quad \lightning \qed
+      \end{align*}
+    \end{enumerate}
+    \item Finde je ein Gegenbeispiel für die Rückrichtung:
+    \begin{enumerate}
+      \item Sei $ X = \{ 0,1 \} $ und $ d $ Metrik auf $ X $ mit $ d(0,1) = 1 $. \\
+        \textbf{Idee}: Wir nehmen zwei Bälle, die sich in der Theorie überschneiden, weil die Summe der Radien kleiner ist als der Abstand, aber in der Schnittmenge liegen keine Elemente. \\
+        Wir wählen $ r_1 = r_2 = \frac{2}{3} $, $ x = 0 $, $ y = 1 $. Wir haben \\
+        $ B_{r_1}(0) = \{ 0 \} $, $ B_{r_2}(1) = \{ 1 \} $, aber $ r_1 + r_2 = \frac{4}{3} > d(0,1) $. 
+        \item Metrik wie in erstem Gegenbeispiel, $ r_1 = r_2 = 100 $, $ x = 0 $, $ y = 1 $. \\
+        Dann ist $ B_{r_1}(0) = \{ 0,1 \} $, $ B_{r_2}(1) = \{ 0,1 \} $, aber $ d(0,1) > 100 - 100 $.
+    \end{enumerate}
+  \end{enumerate}
+\end{problem*}
+
+\begin{problem*}[4]
+  \begin{enumerate}
+    \item \emph{Zeigen Sie, dass $ (\R^2, d_1) $ und $ (\R^2, d_\infty) $ isometrisch sind.} \\
+      Sei $ f : \R^2 \to \R^2 $, $ (x,y) \mapsto (x+y, x-y) $. \\
+      \textbf{Behauptung}: $ f : (\R^2, d_1) \to (\R^2, d_\infty) $ ist Isometrie. \\
+      $ f $ ist linear mit Rang $ 2 $, also bijektiv. \\
+      Seien $ p = (x_1, y_1) $, $ q = (x_2, y_2) \in \R^2 $. Zu zeigen:
+      \begin{equation*}
+        d_\infty(f(p),f(q)) = d_1(p,q)\text{.}
+      \end{equation*}
+      Es ist
+      \begin{align*}
+        d_1(p,q) &= \vert x_1 - x_2 \vert + \vert y_1 - y_2 \vert \\
+          &= \max\{ \vert (x_1-x_2) + (y_1-y_2) \vert, \ \vert (x_1 - x_2) - (y_1-y_2) \vert \} \\
+          &= \max\{ \vert (x_1 + y_1) - (x_2+y_2) \vert, \vert (x_1-y_1)-(x_2-y_2) \vert \} \\
+          &= \text{(undeutlich)} = d_\infty(f(p),f(q))\text{.} \quad \qed
+      \end{align*}
+    \item \emph{Zeigen Sie, dass $ (\R^n, d_1) $ und $ (\R^n, d_\infty) $ \textbf{nicht} isometrisch sind für $ n > 2 $.} \\
+    Angenommen, es gibt eine Isometrie $ \varphi^1: (\R^n, d_\infty) $ nach $ (\R^n, d_1) $. Die Abbildung $ \varphi^2 : (\R^n, d_1) \to (\R^n, d_1) $, $ x \mapsto x - \varphi^1(0) $ ist eine Translation, also eine Isometrie. \\
+    Wähle $ \varphi \coloneqq \varphi^2 \circ \varphi^1 $. $ \varphi $ ist Isometrie mit $ \varphi(0) = 0 $. \\
+    Die Menge $ \{ (x_1, \dots, x_n) : x_i \in \{ -1, 1 \} \} \eqqcolon A $ hat folgende Eigenschaft: Für alle $ p, q \in A $ mit $ p \neq q $ gilt $ d_\infty(p,q) = 2 $ und $ d_\infty(p, 0) = 1 $. \\
+    Sei $ B = \varphi(A) $. Für alle $ p,q \in B $ mit $ p \neq q $ gilt $ d_1(p,q) = 2 $ und $ d_1(p,0) = 1 $. Da $ \varphi $ injektiv ist, gilt $ \vert B \vert = \vert A \vert = 2^n > 2n $ (weil $ n \geq 3 $). Da jedes $ x \in B $ mindestens eine Koordinate $ \neq 0 $ hat, gibt es ein $ i \in \{ 1, \dots, n \} $ und $ p,q,r \in B $ mit $ p_i, q_i, r_i \neq 0 $. \\
+    Dann gibt es oBdA verschiedene $ p,q \in B $ mit $ p_i, q_i > 0 $ (bzw haben selbes Vorzeichen, da es nur zwei mögliche Vorzeichen gibt). \\
+    Es gilt $ d_1(p,q) = \sum_{j = 1}^n \vert p_j - q_j \vert \underset{\text{da beide $ > 0 $}}{<} \sum_{j = 1}^n \vert p_j \vert + \vert q_j \vert = d_1(p,0) + d_1(0,q) = 2 \ \lightning $
+  \end{enumerate}
+\end{problem*}
+
+\section{2017-11-03}
+Nachtragen
+
+\section{2017-11-10}
+
+\begin{problem*}[1]
+  Sei $ (X, d) $ ein metrischer Raum. Zu zeigen: Die Menge $ O $ aller $ d $-offenen\footnote{\textbf{$ d- $ offen}: $ U \subset X $ heißt $ d $-offen, falls $ \forall x \in U \exists \ \epsilon > 0 : B_\epsilon(x) \subseteq U $.} Teilmengen von $ X $ ist Topologie. Wir zeigen die Eigenschaften einer Topologie.
+  \begin{enumerate}
+    \item $ \varnothing \in O $, $ X \in O \quad \checkmark $
+    \item Zu zeigen: beliebige Vereinigungen von $ d $-offenen Mengen sind wieder $ d $-offen. \\
+      Sei $ \{ A_i \}_{ i \in I } $ eine Familie von $ d $-offenen Mengen. Zu zeigen: $ A \coloneqq \bigcup_{i \in I}A_i $ ist $ d $-offen. \\
+      \textbf{Beweis}: Sei $ x \in A $ beliebig. Dann $ \exists \ i \in I $ mit $ x \in A_i $. Da $ A_i $ $ d $-offen ist, gibt es ein $ \epsilon > 0 $ mit $ B_\epsilon(x) \subseteq A_i \subseteq A $. \\
+      Damit ist $ A $ $ d $-offen.
+    \item Zu zeigen: endliche Durchschnitte $ d $-offener Mengen sind wieder $ d $-offen.\footnote{Es ist immer nur der Schnitt zweier Mengen zu zeigen, da $ A_1 \cap \dots \cap A_n = \left( \left( \left( A_1 \cap A_2 \right) \cap A_3 \right) \cdots \right) $. Also ist sukzessive der gesamte Schnitt offen.} \\
+    Seien $ A $, $ B $ $ d $-offen. Zu zeigen: $ A \cap B $ ist wieder $ d $-offen. \\
+    Sei $ x \in A \cap B $. Da $ A $ und $ B $ $ d $-offen sind, gibt es $ \epsilon, \epsilon' > 0 $, sodass $ B_\epsilon(x) \subseteq A $ und $ B_{\epsilon'}(x) \subseteq B $. Wähle $ \epsilon'' = \min\{ \epsilon, \epsilon' \} $. Dann ist $ B_{\epsilon''}(x) = B_\epsilon(x) \cap B_{\epsilon'}(x) \subseteq A \cap B $ und $ A \cap B $ ist $ d $-offen.
+  \end{enumerate}
+\end{problem*}
+
+\begin{problem*}[2]
+  Seien $ X, Y_1, Y_2 $ topologische Räume, seien
+  \begin{align*}
+    p_i: Y_1 \times Y_2 &\to Y_i \\
+    (y_1, y_2) &\mapsto y_i \quad (\text{für } i = 1,2)\text{.}
+  \end{align*}
+  \begin{enumerate}
+    \item Zu zeigen: $ f $ ist stetig $ \Leftrightarrow f_1 \coloneqq p_1 \circ f $, $ f_2 \coloneqq p_2 \circ f $ stetig. \\
+    \textbf{Beweis}:
+    \begin{itemize}
+       \item $ \Rightarrow $. Sei $ f $ stetig. Zu zeigen (oBdA): $ f_1 $ ist stetig, i.e. die Urbilder offener Mengen sind wieder offen. \\
+        Sei $ U \subseteq Y_1 $. Zu zeigen: $ f_1^{-1}(U) $ offen. \\
+        Es gilt\footnote{$ p_1^{-1}(U) = U \times Y_2 $}:
+        \begin{equation*}
+          f_1^{-1}(U) = f^{-1}(p_1^{-1}(U)) = f^{-1}(U \times Y_2)\text{.}
+        \end{equation*}
+        Diese Menge ist offen, da $ f $ stetig ist.
+      \item $ \Leftarrow $. Seien $ f_1, f_2 $ stetig. Zu zeigen: $ f $ ist stetig. Wir zeigen wieder, dass die Urbilder offener Mengen wieder offen sind. \\
+        Sei $ U \in Y_1 \times Y_2 $ offen. Zu zeigen: $ f^{-1}(U) $ ist wieder offen. \\
+        Sei $ x \in f^{-1}(U) $. Zu zeigen: Es gibt eine offene Menge $ U' \subseteq f^{-1}(U) $ sodass $ x \in U' $. \\
+        Es ist $ f(x) \in U $. Da $ U $ offen ist in $ Y_1 \times Y_2 $ gibt es offene $ V_1 \subseteq Y_1 $, $ V_2 \subseteq Y_2 $, sodass $ f( x ) \in V_1 \times V_2 \subseteq U $. \\
+        Jetzt sei $ U_1 \coloneqq f_1^{-1}(U_1) $, $ U_2 \coloneqq f_2^{-1}(U_2) $. Da $ f_1 $, $ f_2 $ stetig sind, sind $ U_1 $ und $ U_2 $ offen, also auch $ U_1 \cap U_2 \eqqcolon U' $ offen. \\
+        Da $ f( x ) \in V_1 \times V_2 $, ist $ f_1( x ) = p_1(f(x)) \in V_1 $, $ f_2(x) = p_2(f(x)) \in V_2 $, also $ x \in U_1 \cap U_2 = U' $.
+     \end{itemize}
+
+    \item \emph{Sind $ p_1 $, $ p_2 $ immer offen?}\footnote{\textbf{Offene + geschlossene Abbildungen}: $ f: X \to Y $ heißt \emph{offen}, wenn für alle offenen $ U \subseteq X $ auch $ f(U) $ offen ist; $ f: X \to Y $ heißt \emph{abgeschlossen}, wenn für alle abgeschlossenen $ U \subseteq X $ auch $ f(U) $ abgeschlossen ist.} \\
+      Ja --- sei $ U \subseteq Y_1 \times Y_2 $ offen. Dann ist
+      \begin{equation*}
+        U = \bigcup\left\{ V_1 \times V_2 : V_1 \subseteq Y_1 \text{ offen}, V_2 \subseteq Y_2 \text{ offen}, V_1 \times V_2 \subseteq U \right\}\text{.}
+      \end{equation*}
+      Dann ist $ p_1(U) = \bigcup\left\{ V_1 : \text{ analog zu } U, V_2 \neq \varnothing \right\} $ eine Vereinigung offener Mengen, also wieder offen --- $ p_2 $ analog.
+
+    \item \emph{Sind $ p_1 $, $ p_2 $ immer abgeschlossen?} \\
+      Nein --- sei
+      \begin{equation*}
+        M = \left\{ (x,y) \in \R^2 : x*y = 1 \right\}\text{.}
+      \end{equation*}
+      Das ist eine klassische Hyperbel. $ M $ ist abgeschlossen, aber $ p_1(M) = \R \setminus { 0 } $ nicht, auch nicht $ p_2(M) = \R \setminus { 0 } $.
+  \end{enumerate}
+\end{problem*}
+
+\begin{problem*}[3]
+  Seien $ X, Y $ Hausdorffräume, $ f,g : X \to Y $ stetig. Zu zeigen: $ \left\{ x \in X : f(x) = g(x) \right\} $ ist abgeschlossen. \\
+  Da $ Y $ Hausforffraum ist
+  \begin{equation*}
+    \Delta_y \coloneqq \left\{ (y,y) : y \in Y \right\}
+  \end{equation*}
+  in $ Y^2 $ abgeschlossen. $ (\star) $
+  \begin{proof}[$ \star $]
+    Zu zeigen: $ \{ (y, y') \in Y^2 : y \neq y' \} \eqqcolon \Delta_y^c $ ist offen. \\
+    Sei $ (y,y') \in \Delta_y^c $. Da $ Y $ hausdorffsch ist, gibt es offene Räume $ U_y $ und $ U_{y'} $, sodass $ y \in U_y $, $ y' \in U_{y'} $, $ U_y \cap U_{y'} = \varnothing $. Dann ist $ (y, y') \in U_y \times U_{y'} \subseteq \Delta_y^c $.
+  \end{proof}
+  Die Funktion
+  \begin{align*}
+    h : X &\to Y\text{,} \\
+    x &\mapsto (f(x), g(x))
+  \end{align*}
+  ist stetig, denn $ p_1 \circ h = f $ und $ p_2 \circ h = g $ sind stetig nach Voraussetzung, also können wir den ersten Teil der Aufgabe 2 anwenden. \\
+  Da $ \Delta_y $ abgeschlossen ist, ist $ h^{-1}(\Delta_y) = \left\{ x \in X : f(x) = g(x) \right\} $ ebenfalls abgeschlossen.
+\end{problem*}
+
+\begin{problem*}[4]
+  Sei $ X $ topologischer Raum und $ \sim $ Äquivalenzrelation auf $ X $. Die kanonische Abbildung $ \pi : X \to X/_\sim $ sei offen.
+  \begin{enumerate}
+    \item Zu zeigen: Falls $ X $ eine abzählbare Basis hat, dann auch $ X/_\sim $. \\
+      Sei $ B $ eine beliebige Basis von $ X $. Sei $ U \in X/_\sim $ offen. Dann ist $ \pi^{-1}(U) $ nach Definition der Quotiententopologie offen, also existiert $ A \subseteq B $ mit $ \pi^{-1}(U) = \bigcup_{M \in A}M $. Dann ist
+      \begin{equation*}
+        U = \pi(\pi^{-1}(U)) = \pi\left( \bigcup_{M \in A} M \right) = \bigcup_{M \in A}\pi(M)\text{.}
+      \end{equation*}
+      Damit ist $ \pi(B) \coloneqq \left\{ \pi(M) : M \in B \right\} $ eine Basis von $ X/_\sim $ und wenn $ B $ abzählbar ist, so ist auch $ \pi(B) $ abzählbar.
+    \item Zu zeigen: Ist $ A \coloneqq \left\{ (x,y) \in X^2 : x \sim y \right\} $ abgeschlossen, so ist $ X/_\sim $ hausdorffsch. \\
+    \textbf{Beweis}: Sei $ A $ abgeschlossen. Seien $ p_1, p_2 \in X/_\sim, p_1 \neq p_2 $. Wir wollen zeigen, dass $ p_1 $ und $ p_2 $ durch offene Mengen getrennt werden können. \\
+    Seien $ x_1 \in \pi^{-1}(p_1) $, $ x_2 \in \pi^{-1}(p_2) $ ($ x_1 $ und $ x_2 $ existieren, weil die kanonische Abbildung surjektiv ist). Da $ [x_1]_\sim = p_1 \neq p_2 = [x_2]_\sim $ ist $ x_1 \not \sim x_2 $, also $ (x_1, x_2) \in A^c $. \\
+    Da $ A_c $ in der Produkttopologie auf $ X^2 $ offen ist, gibt es $ U_1, U_2 \subseteq X $ offen, sodass $ (x_1, x_2) \in U_1 \times U_2 \subseteq A^c $. \\
+    Sei nun $ V_1 = \pi(U_1) $, $ V_2 = \pi(U_2) $. Es gilt $ p_1 \in V_1 $, $ p_2 \in V_2 $. $ V_1 $ und $ V_2 $ sind offen, da die kanonische Abbildung nach Voraussetzung offen ist. \\
+    Es bleibt zu zeigen, dass $ V_1 \cap V_2 = \varnothing $. Sei $ q_1 \in V_1 $, $ q_2 \in V_2 $, $ x_1 \in q_1 $, $ x_2 \in q_2 $. Dann ist $ (x_1, x_2) \in U_1 \times U_2 \subseteq A_c $, also ist $ x_1 \not \sim x_2 $ und demnach $ q_1 = [x_1]_\sim \neq [x_2]_\sim = q_2 $.
+  \end{enumerate}
+\end{problem*}
+
+\section{2017-11-17 - Übungsblatt 4}
+
+\begin{problem*}[1]
+Sei $A \subseteq X$ zusammenhängend. Zu zeigen: $\bar{A}$ ist abgeschlossen.\\ 
+Sei $B \subseteq \bar{A}$ offen und abgeschlossen in $\bar{A}$.\\
+OBdA sei $B \cap A \neq \varnothing$, ansonsten setze $B' = \bar{A}\setminus B$.
+Da $B \cap A$ offen, abgeschlossen und nichtleer in $A$ ist, folgt aus $A$ zusammenhängend, dass 
+$B \cap A = A$ also $A \subseteq B$.\\
+Damit ist $A \subseteq B \subseteq \bar{A} $ und da $ B $ abgeschlossen ist, ist $ \bar{A} \subseteq B $\\
+und $B \subseteq \bar{A} \Rightarrow \rightarrow \bar{A} = B$\\
+Folglich ist auch $ \bar{A} $ abgeschlossen.
+\end{problem*}
+
+\begin{problem*}[1b]
+Seien $ A,B \subseteq X$ zusammenhängend und $ A \cap B = \varnothing $.\\
+Zu zeigen: $ A \cup B$ zusammenhängend.
+\textbf{Beweis}: Sei $C \subseteq A \cup B$ nichtleer, offen udn abgeschlossen in $ A \cup B$.\\
+Sei $x \in C$, dann ist $ x \in A$ (oBdA, sonst wähle $ B $)\\
+Da $C \cap A$ abgeschlossen, offen und nichtleer in $ A $ und da $ A $ zusammenhängend, ist $ C \cap A = A$
+also $A \subseteq C$. Damit ist $\varnothing \neq A \cap B \subseteq C \cap B$. Weiter ist $C \cap B$ abgeschlossen, offen und nichtleer in $ B $. Da $ B $ zusammenhängend ist, ist $ C \cap B = B$ und $B \subseteq C$. Damit ist $C \subseteq A \cup B \subseteq C$.\\
+Also $C = A \cup B \Rightarrow A \cup B$ ist zusammenhängend, da $ A \cup B $ und $\varnothing$ die einzigen gleichzeitig offenen und abgeschlossenen Mengen sind.  
+
+\end{problem*}
+
+\begin{problem*}[1c]
+Sei $ \{ A_i \}_{i \in I}$ eine zusammenhängende Familie (Familie zusammenhängender Mengen), sodass 
+$ A_i \cap A_j \neq \varnothing$.\\ 
+Zu zeigen: $A \coloneqq \bigcup_{ i \in I } A_i$ ist zusammenhängend.\\
+Sei $B \subseteq A$ offen, abgeschlossen und nichtleer. Sei weiter $x \in B$. Dann existiert $i \in I$ mit
+$x \in A_i$. Sei $y \in A$ beliebig.\\
+\textbf{Behauptung}: $y \in B$
+\textbf{Beweis}: Sei $ j \in I$, sodass $ y \in A_j$ nach Aufgabenteil b) ist dann $ A_j \cup A_i $ zusammenhängend. Damit ist $ B \cap (A_i \cup A_j) = A_j \cup A_i $, weil alle $ A_i $ zusammenhängend.
+Weiter ist $y \in A_i \cup A_j$ und $ y \in B $.\\
+Daraus folgt: $A \subseteq B $ und $ B \subseteq A \Rightarrow A = B$.
+\end{problem*}
+
+\begin{problem*}[2a]
+Zu zeigen: $B$ ist die Basis einer Topologie $O_p$ auf $ P$.
+\begin{enumerate}
+  \item Zeige: $P \in O_p$, wobei $O_p = \{ \bigcup_{U \in A } U | A \subseteq B \}$. \\
+  $P = U_{ \varnothing } (0,0, \dots) \in B$ also $P \in O_p$
+  \item Für $V_1,V_2 \in O_p$ gilt $ V_1 \cap V_2 \in O_p$.\\
+  Sei $V_1 = \bigcup_{ U \in A_1} U $, $V_2 = \bigcup_{ U \in A_2} U $.\\
+  \textbf{Behauptung}: Für alle $U,U' \in B: U \cap U' \in B$ oder $U \cap U' = \varnothing$.\\
+  Dann ist 
+  \begin{equation*}
+    V_1 \cap V_2 = \bigcup_{ U \in A_1 }\bigcup_{ U' \in A_2 } (U \cap U')$ also $ V_1 \cap V_2 \in O_p\\
+  \end{equation*}
+  \textbf{Beweis}: Seien $U = U_{ \mu } (a) \in B , U' = U_{ \mu' } (a') \in B $. Falls $U \cap U' \neq \varnothing$ existiert $a'' \in U \cap U'$. Dann gilt $U = U_{ \mu }(a'')$, $U' = U_{ \mu' }(a'')$ . Also:\\
+  $U \cap U' = U_{ \mu \cup \mu' } (a'')$
+  \item $ O_P $ ist bezüglich Vereinigung abgeschlossen, denn $ O_p $ besteht aus Vereinigungen von Elementen aus $ B $. \\
+\end{enumerate}
+Insgesamt folgt damit: $ O_p $ ist Topologie!  
+\end{problem*}
+
+\begin{problem*}[2b]
+Ist $ (P, O_p)$  zusammenhängend, unzusammenhängend oder total unzusammenhängend?\\
+\textbf{Behauptung:}: $ (P, O_p)$ ist total unzusammenhängend!\\
+\textbf{Beweis}: Seien $ a,b \in P$ Zeige: Es gibt offene, abgeschlossene Mengen $ U_a, U_b$ mit $U_a \cup U_b = P, U_a \cap U_b = \varnothing$ und weiter $ a \in U_a , b \in U_b$.\\
+Seien $a \neq b \Rightarrow \exists i \in \mathbb{N}$ sodass $a_i \neq b_i$. Setze $ U_a = U_{\{ i \}}(a)$und $ U_b = U_{\{ i \}}(b)$.\\
+$ U_a $ und $ U_b $ sind in $ O_p $ offen. Nach Wahl von $i $ ist $ U_a \cap U_b = \varnothing$ und $ U_a \cup U_b = P$. Angenommen es gibt ein zusammenhängendes $V \subseteq P mit \vert V \vert \geq 2$.\\
+Wähle $a, b \in V$ mit $ a \neq b$ und konstruiere $U_a, U_b$ wie oben. Dann ist $ V = (V \cap U_a) \cup (V \cap U_b)$ eine offene disjunkte Zerlegung von $ V $. \textbf{Widerspruch!}
+
+\end{problem*}
+
+\begin{problem*}[3a]
+Es reicht zu zeigen, dass alle $p_i$ stetig sind.\\
+\textbf{"$\Rightarrow$"}: Die Mengen $p_i^{-1}(\varnothing) = \varnothing$\\
+ $ p_i^{-1}( \{ 0,1 \}) = P$\\
+$p_i^{-1}(\{ 1 \}) = U_{\{ i \}}(1,\dots)$\\ 
+$ p_i^{-1}(\{ 0 \}) = U_{\{ i \}}(0,\dots)$\\
+sind alle offen.\\
+\textbf{"$\Leftarrow$"}: Sei $ U \subseteq P$ offen. Dann ist $U = \bigcup_{ U' \in A }U'$ für $ A \subseteq B$ also $f^{-1}(U) = \bigcup_{U \in A} f^{-1}(U')$. \\
+Fallse alle $f^{-1}(U')$ offen sind, dann auch $ f^{-1}(U) $. Damit können wir uns für $U$ auf Basiselemente beschränken. Sei also $ U = U_\mu(a) \in B$.\\
+Sei weiter $M = \{ i_1, \dots,i_n \}$. Dann ist:
+\begin{equation*}
+    U = U_{i_1}(a)\cap \dots \cap U_{i_n}(a) = p_i^{-1}(\{ a_{i_1} \}) \cap \dots \cap p_i^{-1}(\{ a_{i_n} \})
+\end{equation*}
+Also ist: $f^{-1}(U) = f_i^{-1}(\{ a_{i_1} \}) \cap \dots \cap f_i^{-1}(\{ a_{i_n} \}) $.\\
+Diese Menge ist endlicher Schnitt offener Mengen, weil alle $f_i$ stetig sind.
+\end{problem*}
+
+\begin{problem*}[3b]
+Zu zeigen: $f: X \to (P,\mathcal{P}(P))$ ist nicht genau dann stetig, wenn alle $f_i: X \to \{ 0,1 \}$ stetig sind.\\
+\textbf{Beispiel}: $X = (P, O_P), f: (P, O_p) \to (P, \mathcal{P}(P)), a \mapsto a$.\\
+Sei $ A \in \mathcal{P}(P) \setminus O_p$ beliebig, dann ist $ A $ offen in $\mathcal{P}(P)$ aber 
+$f^{-1}(A) = A$ ist in $(P, O_P)$ nicht offen, also ist $f$ nicht stetig.
+\end{problem*}
+
+
+\section{2017-11-24 - Übungsblatt 5}
+
+
+\begin{problem*}[1a]
+
+Sei $ Y \subseteq \mathcal{R}^n$ heißt konvex, falls für $p, q \in Y$ auch die Verbindungsgerade $\bar{pq}$ in $Y$
+.\\
+Zeigen sie: Jede konvexe Teilemenge von $ \mathcal{R}^n$ ist zusammenhängend. \\
+\textbf{Behauptung}: $Y konvex \Rightarrow Y wegzusammenhängend.$\\
+Seien $p, q \in Y.$ Sei $c: [0,1] \to Y, t \mapsto (1-t)p +tq $ Die Verbindungsstrecke.
+Dann ist $ c(0) = p, c(1) = q, c([0,1]) \subseteq Y$ wegen Konvexität. \\
+Da $ p,q $ bel. waren, ist $ Y $ wegzusammenhänged. 
+\end{problem*}
+
+\begin{problem*}[2]	
+vgl. Aufgabentext.. \\
+Zu zeigen: $ X $ ist kompakt $ \Longleftrightarrow$ für alle Familien $(A_i)_{ i \in I}$ \textbf{abgeschlossen}
+Teilmengen von $ X $ mit endlicher Schnitteigenschaft gilt: $ \bigcap_{ i \in I}  \neq \varnothing$.\\
+Sei $ (A_i)..$ Familie und $\forall i \in I$ sei $B_i \coloneqq X \setminus A_i = A_i^{C}$.\\
+Dann gelten: 
+	$(A_i)_ { i \in I}$ ist Familie von offenen Mengen $\Longleftrightarrow$ $(B_i)$ besteht aus abg. Mengen.
+	\begin{equation*}
+		\bigcap_{ i \in M} A_i \neq \varnothing \Leftrightarrow X \setminus \bigcap_{ i \in M} A_i \neq	X \setminus \varnothing \Leftrightarrow \bigcup_ {i \in M} (X \setminus A_i) \neq X \Longleftrightarrow (B_i)_{ i \in M }  
+	\end{equation*}
+	ist keine Überdeckung von X.
+	\textbf{Beweis: } Alle Familien abgeschlossener Teilmengen von X mit endl. Schnitteigenschaft haben nichtleeren Schnitt. $\Leftrightarrow$ Alle Familien mit abgeschlossenen Teilmengen von X mit leerem Schnitt besitzen eine undendliche Teilfamilie mit leerem Schnitt. \\
+	$\Leftrightarrow$ Alle Familien offener Teilmengen von $ X $, die $ X $ überdecken, besitzen eine endliche Teilfamilie, die $ X $ überdeckt. $\Longleftrightarrow $x ist kompakt
+\end{problem*}
+
+\begin{problem*}[3]
+Sei $ X $ kompakt, $ f: X \to \mathcal{R}$ stetig.\\
+Zeigen Sie: $ f $ nimmt auf $ \mathcal{R} $ ein endliches Minimum und endliches Maximum an.\\
+\textbf{Beweis}: Da stetige Bilder kompakter Mengen wieder kompakt sind, ist $f(X)$ kompakt in $\mathcal{R}$.\\
+Nach dem Satz von Heine-Borel sind die kompakten Mengen in $\mathcal{R}$ genau die abgeschlossenen, beschränkten Mengen. Damit ist $ f(X) $ also abgeschlossen und beschränkt, außerdem nichtleer.\\
+Zeige ausführlich (statt mit Ana I.): $ f(X) $ hat Maximum, Minimum.\\
+Sei $ s \coloneqq sup f(X)$. Da $ f(X) $ nichtleer ist, ist $ s > - \infty$.\\
+Da $ f(X) $ nach oben beschränkt  ist, ist $ s < \infty$.
+Für alle $n \in \mathcal{N}$ gibt es ein $x_n \in f(X)$ sodass $s - \frac{1}{n} < x_n \leq s$, weil $s - \frac{1}{n}$ keine obere Schranke von $ f(X) $ ist.\\
+Damit ist $\lim_{ n \rightarrow \infty } x_n = s$. Damit ist $s \in f(X) $ und somit Maximum von $ f $.\\
+\end{problem*}
+
+\begin{problem*}[4a]
+Sind Mannigfaltigkeiten stückweise wegzusammenhängend?\\
+\textbf{Behauptung}: Ja! \\
+\textbf{Beweis}: Sei $ X \in M, M $ sei $ n-dim $ Mannigfaltigkeit. \\
+Dann gibt es eine Karte $(\phi, U) $ von $ M, \phi: U \to  \mathcal{R}^n, x \in U$.\\
+Damit ist $ \varphi(x) $ innerer Punk von $ \varphi(U)$, also gibt es einen offenen Ball \\ $B \coloneqq B_\varepsilon(\varphi(x)) \subseteq \varphi(U)$.\\
+$ B $ ist wegzusammenhängend, also auch $\varphi^{-1}(B) \subseteq U$ wegzusammenhängend und $\varphi^{-1}(B)$ ist \textbf{offene} Umgebung von $\varphi^{-1}(\varphi(x)) = x$, wie gesucht.
+\end{problem*}
+
+\begin{problem*}[4b]
+Sind zusammenhängede Mannigfalitgkeiten immer wegzusammenhängend?\\
+\textbf{Behauptung}: Ja!\\
+\textbf{Beweis}: Für alle $ x \in X$ ist $ W(x) $ offen.\\
+Zu zeigen: Für alle $ y \in W(x)$ gibt es eine in $ X $ offene Umgebung von $ y $ in $ W(x) $.\\
+Sei $ y \in W(x)$. Dann ist $ W(x) = W(y)$. Sei $ U $ eine offene, wegzusammenhängende Umgebung von $ y $.\\
+Dann ist $ U \subseteq W(y) = W(x)$ die gesuchte Umgebung.\\
+Angenommen, X ist nicht wegzusammenhängend. Dann gibt es $ x,y \in X $ mit $x \in W(x), y \notin W(x)$. \\
+Nun ist $W(x)$ offen (siehe oben), und $ W(x) $ ist abgeschlossen, denn
+\begin{equation*}
+	X \setminus W(x) = \bigcup_{ z \notin W(x)} W(z)
+\end{equation*}
+ist auch offen. Damit ist $ W(x) $ Zeuge, dass $ X $ nicht zusammenhängend ist. Damit folgt die Behauptung.\\
+\end{problem*}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
