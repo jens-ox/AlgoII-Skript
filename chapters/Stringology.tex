@@ -21,9 +21,9 @@ Naive Sortierverfahren, wie sie aus der Vorlesung ``Algorithmen 1'' bekannt sind
     \textbf{if} \( \left\vert S \right\vert \leq 1 \) \textbf{then return} \( S \) \\
     pick \( p \in S \) randomly \\
     \textbf{return} concatenation of \\
-    \phantom{\quad} \textsc{mkqSort} (\( \langle e \in S : e[l] < p[l] \rangle, l \)), \\
-    \phantom{\quad} \textsc{mkqSort} (\( \langle e \in S : e[l] = p[l] \rangle, l+1 \)), \\
-    \phantom{\quad} \textsc{mkqSort} (\( \langle e \in S : e[l] > p[l] \rangle, l \))
+    \phantom{\enskip} \textsc{mkqSort} (\( \langle e \in S : e[l] < p[l] \rangle, l \)), \\
+    \phantom{\enskip} \textsc{mkqSort} (\( \langle e \in S : e[l] = p[l] \rangle, l+1 \)), \\
+    \phantom{\enskip} \textsc{mkqSort} (\( \langle e \in S : e[l] > p[l] \rangle, l \))
   \end{pseudocode}
   \caption{Pseudocode-Implementierung des Multikey-Quicksort-Algorithmus}
 \end{figure}
@@ -51,10 +51,10 @@ Das naive Vorgehen ist, an jeder Position von \( T \) zu schauen, ob an dieser d
     \textbf{\textsc{naivePatternMatch}} (\( P \), \( T \)) \\
     \( i \),\( j \coloneqq 1 \) \\
     \textbf{while} \( i \leq n-m+1 \) \\
-    \phantom{\quad} \textbf{while \( j \leq m \wedge t_{i+j-1} = p_j \)} \textbf{do} \( j \)++ \\
-    \phantom{\quad} \textbf{if \( j > m \)} \textbf{then return} ``\( P \) occurs at pos \( i \) in \( T \)'' \\
-    \phantom{\quad} \( i \)++ \\
-    \phantom{\quad} \( j \coloneqq 1 \)
+    \phantom{\enskip} \textbf{while \( j \leq m \wedge t_{i+j-1} = p_j \)} \textbf{do} \( j \)++ \\
+    \phantom{\enskip} \textbf{if \( j > m \)} \textbf{then return} ``\( P \) occurs at pos \( i \) in \( T \)'' \\
+    \phantom{\enskip} \( i \)++ \\
+    \phantom{\enskip} \( j \coloneqq 1 \)
   \end{pseudocode}
   \caption{Pseudocode-Implementierung des naiven Pattern-Matching-Algorithmus}
 \end{figure}
@@ -93,10 +93,10 @@ Der Algorithmus besteht aus zwei Teilen:
     \textbf{\textsc{KMPMatch}} (P,T) \\
     \( i,j \coloneqq 1 \) \\
     \textbf{while} \( i \leq n - m + 1 \) \\
-    \phantom{\quad} \textbf{while} \( j \leq m \wedge t_{i+j-1} = p_j \) \textbf{do} \( j \)++ \\
-    \phantom{\quad} \textbf{if} \( j > m \) \textbf{then return} ``\( P \) occurs at pos \( i \) in \( T \) '' \\
-    \phantom{\quad} \( i \) += \( j - \text{border}[j] + 1 \) \\
-    \phantom{\quad} \( j \coloneqq \max\left \{ 1, \text{border}[j]+1 \right \} \)
+    \phantom{\enskip} \textbf{while} \( j \leq m \wedge t_{i+j-1} = p_j \) \textbf{do} \( j \)++ \\
+    \phantom{\enskip} \textbf{if} \( j > m \) \textbf{then return} ``\( P \) occurs at pos \( i \) in \( T \) '' \\
+    \phantom{\enskip} \( i \) += \( j - \text{border}[j] + 1 \) \\
+    \phantom{\enskip} \( j \coloneqq \max\left \{ 1, \text{border}[j]+1 \right \} \)
   \end{pseudocode}
 \end{enumerate}
 
@@ -221,10 +221,10 @@ Der Algorithmus sieht folgendermaßen aus (\( O(n) \)):
   \textbf{\textsc{calculateLCPArray}} \( (\text{SA}^{-1}, \text{SA}) \) \\
   \( h \coloneqq 0 \), \( \text{LCP}[1] \coloneqq 0 \) \\
   \textbf{for} \( i = 1,\dots,n \) \textbf{do} \\
-  \phantom{\quad} \textbf{if} \( \text{SA}^{-1}[i] \neq 1 \) \textbf{then} \\
-  \phantom{\quad} \phantom{\quad} \textbf{while} \( t_{i+h} = t_{\text{SA}[\text{SA}^{-1}[i]-1]+h} \) \textbf{do} \( h \)++ \\
-  \phantom{\quad} \phantom{\quad} \( \text{LCP}[\text{SA}^{-1}[i]] \coloneqq h \) \\
-  \phantom{\quad} \phantom{\quad} \( h \coloneqq \max(0,h-1) \)
+  \phantom{\enskip} \textbf{if} \( \text{SA}^{-1}[i] \neq 1 \) \textbf{then} \\
+  \phantom{\enskip} \phantom{\enskip} \textbf{while} \( t_{i+h} = t_{\text{SA}[\text{SA}^{-1}[i]-1]+h} \) \textbf{do} \( h \)++ \\
+  \phantom{\enskip} \phantom{\enskip} \( \text{LCP}[\text{SA}^{-1}[i]] \coloneqq h \) \\
+  \phantom{\enskip} \phantom{\enskip} \( h \coloneqq \max(0,h-1) \)
 \end{pseudocode}
 
 \subsection{Suffix-Bäume}
@@ -260,4 +260,49 @@ Zur Angabe der Komplexitäten sind zwei Fälle zu unterscheiden:
 
 \section{Datenkompression}
 
-Eine Anwendung der Suffix-Arrays und -Trees ist die \term{Datenkompression}\index{Datenkompression}.
+Eine Anwendung der Suffix-Arrays und -Trees ist die \term{Datenkompression}\index{Kompression}. Inhalt dieser Vorlesung wird ausschließlich die \emph{verlustfreie Textkompression} sein.
+
+\subsection{Wörterbuchbasierte Textkompression}
+
+Für besonders große Datenbestände bietet sich eine \term{wörterbuchbasierte Textkompression}\index{Kompression!wörterbuchbasiert} an. Grundidee ist, \( \Sigma' \subseteq \Sigma^\ast \) zu wählen und \( S \in \Sigma^* \) durch  \( S' = \left\langle s_1', \dots, s_k' \right\rangle \in \Sigma'^\ast \)  zu ersetzen, sodass \( S = s_1' \cdot \cdots \cdot s_k' \) ist. Problem ist der hohe zusätzliche Platzbedarf für das Wörterbuch.
+
+\subsection{Lempel-Ziv-Kompression}
+
+Die \term{Lempel-Ziv-Kompression}\index{Kompression!Lempel-Ziv} baut das Wörterbuch \emph{on the fly} bei Codierung \underline{und} Decodierung, sodass dieses nicht explizit gespeichert werden muss. \\
+
+\begin{figure}[H]
+  \begin{minipage}{.42\textwidth}
+    \begin{pseudocode}
+      \textbf{\textsc{naiveLZCompress}}\( (\left\langle s_1,\dots,s_n \right\rangle, \Sigma) \) \\
+      \( D \coloneqq \Sigma \) \quad // init dictionary \\
+      \( p \coloneqq s_1 \) \quad // current string \\
+      \textbf{for} \( i \coloneqq 2 \) \textbf{to} \( n \) \textbf{do} \\
+      \phantom{\enskip} \textbf{if} \( p \cdot s_i \in D \) \textbf{then} \( p \coloneqq p \cdot s_i \) \\
+      \phantom{\enskip} \textbf{else} \\
+      \phantom{\enskip} \phantom{\enskip} output code for \( p \) \\
+      \phantom{\enskip} \phantom{\enskip} \( D \coloneqq D \cup p \cdot s_i \) \\
+      \phantom{\enskip} \phantom{\enskip} \( p \coloneqq s_i \) \\
+      output code for \( p \)
+    \end{pseudocode}
+  \end{minipage}
+  \begin{minipage}{.55\textwidth}
+    \begin{pseudocode}
+      \textbf{\textsc{naiveLZDecode}}\( (\left\langle c_1,\dots,c_k \right\rangle) \) \\
+      \( D \coloneqq \Sigma \) \\
+      output decode\( (c_1) \) \\
+      \textbf{for} \( i \coloneqq 2 \) \textbf{to} \( k \) \textbf{do} \\
+      \phantom{\enskip} \textbf{if} \( c_i \in D \) \textbf{then} \\
+      \phantom{\enskip} \phantom{\enskip} \( D \coloneqq D \cup \text{decode}(c_{i-1}) \cdot \text{decode}(c_i)[1] \)
+      \phantom{\enskip} \textbf{else} \\
+      \phantom{\enskip} \phantom{\enskip} \( D \coloneqq D \cup \text{decode}(c_{i-1}) \cdot \text{decode}(c_{i-1})[1] \) \\
+      \phantom{\enskip} output decode\( (c_i) \) \\
+      \ 
+    \end{pseudocode}
+  \end{minipage}
+  \caption{Kompressions- und Dekodierungs-Algorithmus für die Lempel-Ziv-Kompression}
+\end{figure}
+
+\begin{figure}[H]
+  \includegraphics[width=0.4\textwidth]{LZCompress}
+  \caption{Beispiel für das Bilden der Lempel-Ziv-Kompression des Wortes ``\emph{abracadabra}''. Der Baum wird \emph{on the fly} berechnet und nicht übergeben, sondern nur die komprimierte Information und das Alphabet}
+\end{figure}
