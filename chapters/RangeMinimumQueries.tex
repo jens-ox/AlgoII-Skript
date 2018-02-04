@@ -15,7 +15,7 @@ Ein naiver Ansatz, um eine range minimum query auszuführen, ist, einfach das Ar
   \left\langle O(1), O(n) \right\rangle\text{.}
 \end{equation*}
 
-\subsection{Lösung 1 --- \( \left\langle O(n), O(\log n) \right\rangle \)}
+\section{Lösung 1 --- \( \left\langle O(n), O(\log n) \right\rangle \)}
 
 Baut man einen binären Suchbaum über das Array auf, so lässt sich die Komplexität der Abfrage auf \( O(\log n) \) reduzieren.
 
@@ -26,7 +26,7 @@ Hierzu betrachtet man die größtmöglichen Knoten, die vollständig im Abfragei
   \caption{Die grauen Felder stellen die Knoten des binären Suchbaums dar, sie beinhalten die Position des Arrays, an der der Teilbaum, dessen Wurzel sie sind, den minimalen Wert annimmt. Die größten Knoten, die vollständig im Intervall liegen, sind grün markiert.}
 \end{figure}
 
-\subsection{Lösung 2 --- \( \left\langle O(n\log n),O(1) \right\rangle \)}
+\section{Lösung 2 --- \( \left\langle O(n\log n),O(1) \right\rangle \)}
 
 Wir reduzieren nun die Zeit, die zum Bearbeiten der rmq benötigt wird, auf \( O(1) \), indem wir für jedes \( A[i] \) ein Array \( M_i[0,\log n] \) vorberechnen. Es sei
 \begin{equation*}
@@ -42,7 +42,7 @@ Wir suchen dafür \( 2^{\lfloor l - r \rfloor} \), also die größte Zweierpoten
   \caption{Funktionsweise des zweiten rmq-Algorithmus}
 \end{figure}
 
-\subsection{Lösung 3 --- \( \left\langle O(n \log \log n), O(1) \right\rangle \)}
+\section{Lösung 3 --- \( \left\langle O(n \log \log n), O(1) \right\rangle \)}
 
 Wir wenden folgende Prozedur an:
 
@@ -61,4 +61,28 @@ Soll nun \( \text{rmq}_A(l,r) \) bestimmt werden, so geht das folgendermaßen:
   \item Berechne \( m = \text{rmq}_S(l'+1, r'-1) \). Wir nutzen also die Struktur über \( S \), um die rmq-Werte der Blöcke zwischen den beiden Grenzblöcken zu berechnen.
   \item Es seien \( k_0,k_1,k_2 \) die \( \text{rmq}_A \)-Resultate in den Blöcken \( l' \), \( r' \) und \( m \)
   \item \( \text{rmq}_A(l,r) = \text{arg}\min \left \{ A[k_0],A[k_1],A[k_2] \right \} \)\text{.}
+\end{enumerate}
+
+\section{Lösung 4 --- \( \left\langle O(n),O(1) \right\rangle \)}
+
+Zur Konstruktion des Algorithmus mit linearem Platzverbrauch benötigen wir kartesische Bäume.
+
+\subsection{Kartesischer Baum}
+
+Der \term{kartesische Baum}\index{Kartesischer Baum} eines Arrays \( A \) ist folgendermaßen definiert:
+
+\begin{itemize}
+  \item \emph{Wurzel} des Baums ist das (linkste) kleinste Element \( m \) des Arrays, mit Position als Label.
+  \item Die Wurzel hat zwei Kindknoten --- die Wurzel des linken und die Wurzel des rechten Subarrays von \( A \) (jeweils von \( m \) aus).
+  \item Rekursion.
+\end{itemize}
+
+\subsection{Implementierung}
+
+Die Implementierung funktioniert so:
+
+\begin{enumerate}
+  \item Partitioniere das Array in Blöcke der Größe \( s \) --- jeder Block entspricht einem kartesischen Baum.
+  \item Berechne alle \( s^2 \) Möglichkeiten aller \( \frac{1}{s+1} \binom{2s}{s} \) möglichen kartesischen Bäume der Größe \( s \) in einer Tabelle \( P \). Diese benötigt \( O(2^{2s}s^2) \) Speicher, also braucht \( P \) für \( s = \frac{\log n}{4} \) nur \( o(n) \) Speicher.
+  \item Berechne nach Lösung \( 2 \) die Struktur für das Array \( A' \), welche aus den blockweisen Minima von \( A \) besteht (\( O(n) \) Zeit, \( O(n) \) Platz).
 \end{enumerate}
