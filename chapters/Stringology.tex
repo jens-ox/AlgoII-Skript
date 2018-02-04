@@ -2,7 +2,7 @@
 
 \begin{tcolorbox}[colframe=black!3!white]
   \textbf{Inhalt dieses Kapitels}:
-  \tcblower
+  \tcblower{} 
   \begin{itemize}
     \item Strings sortieren
     \item Patterns suchen
@@ -136,6 +136,97 @@ Das \term{Suffix-Array}\index{Suffix-Array} eines Strings lässt sich nun folgen
 
 Mithilfe dieses Suffix-Arrays lassen sich später viele Suchprobleme in Linearzeit lösen. Beispielsweise ist die Suche nach dem längsten Substring, der (eventuell mit Überschneidung) zweimal im Text vorkommt, linear --- dafür muss nach Berechnung des Suffix-Arrays der längste String gefunden werden, der Präfix von zwei Strings im Suffix-Array ist (im Beispiel oben wäre das ``\emph{ana}'').
 
+\subsection{Berechnung des Suffix-Arrays in Linearzeit}
+
+Das Suffix-Array eines Strings lässt sich in Linearzeit berechnen.\footnote{Kärkkäinen, Sanders, Burkhardt: Linear Work Suffix Array Construction} Hier soll lediglich das Prinzip erläutert werden, genauere Angaben gibt es im Paper.
+
+Wir betrachten den String
+\begin{equation*}
+  T[0,n) = \ \underset{\texttt{0}}{\texttt{x}}\ \underset{\texttt{1}}{\texttt{a}}\ \underset{\texttt{2}}{\texttt{b}}\ \underset{\texttt{3}}{\texttt{b}}\ \underset{\texttt{4}}{\texttt{a}}\ \underset{\texttt{5}}{\texttt{d}}\ \underset{\texttt{6}}{\texttt{a}}\ \underset{\texttt{7}}{\texttt{b}}\ \underset{\texttt{8}}{\texttt{b}}\ \underset{\texttt{9}}{\texttt{a}}\ \underset{\texttt{10}}{\texttt{d}}\ \underset{\texttt{11}}{\texttt{o}}\text{.}
+\end{equation*}
+Unser Ziel ist das Suffix-Array
+\begin{equation*}
+  \text{SA} = \left( 12,1,6,4,9,3,8,2,7,5,10,11,0 \right)\text{.}
+\end{equation*}
+
+Wir gehen wie folgt vor:
+\begin{enumerate}
+  \setcounter{enumi}{-1}
+  \item \textbf{Suffixe wählen}. \quad Sei 
+  \begin{equation*}
+    B_k = \left \{ i \in [0,n] \ : \ i \mod 3 = k \right \}
+  \end{equation*}
+  und \( C = B_1 \cup B_2 \) sowie \( S_C \) die Menge der entsprechenden Suffixe. \( C \) ist also die Menge aller Positionen in \( T \), an denen Suffixe mit einer nicht durch \( 3 \) teilbaren Länge beginnen. Hier ist \( C = \left \{ 1,4,7,10,2,5,8,11 \right \} \).
+  
+  \item \textbf{Gewählte Suffixe sortieren}. \quad Wir fügen am Ende von \( T \) beliebig viele \texttt{0} hinzu und bilden zuerst für \( k = 1,2 \) die Strings
+  \begin{equation*}
+    R_k = [t_k t_{k+1} t_{k+2}][t_{k+3}t_{k+4}t_{k+5}]\cdots[t_{\max B_k}t_{\max B_{k}+1}t_{\max B_k +2}]\text{.}
+  \end{equation*}
+  Der Charaktere von \( R_k \) sind also Tripel. Das letzte Tripel ist immer eindeutig, weil \( t_{\max B_k + 2} = 0 \). Sei \( R = R_1 \odot R_2 \).
+
+  Hier ist
+  \begin{equation*}
+    R = [\texttt{abb}][\texttt{ada}][\texttt{bba}][\texttt{do0}][\texttt{bba}][\texttt{dab}][\texttt{bad}][\texttt{o00}]\text{.}
+  \end{equation*}
+
+  Die Ordnung der Suffixe von \( R \) stimmt mit der Ordnung der Suffixe \( S_i \) überein, deswegen genügt es, die Suffixe von \( R \) zu sortieren.
+
+  Wir sortieren \( R \) nun, indem wir die einzelnen Charaktere von \( R \) sortieren und durch ihren Rang in \( R \) ersetzen:
+  \begin{equation*}
+    \text{SA}_{R} = \left( 8,0,1,6,4,2,5,3,7 \right)\text{.}
+  \end{equation*}
+
+  Nun weisen wir jedem Suffix einen Rang zu. Dazu sei \( \text{rank}(S_i) \) der Rang von \( S_i \) in \( C \). Für \( i \in B_0 \) sei \( \text{rank}(S_i) \) nicht definiert.
+
+  Hier ist \( \text{rank}(S_i) = \ \perp \ 1 \ 4 \ \perp \ 2 \ 6 \ \perp \ 5 \ 3 \ \perp \ 7 \ 8 \  \perp \ 0 \ 0 \).
+
+  \item \textbf{Restliche Suffixe sortieren}. \quad Jeder Suffix \( S_i \in S_{B_0} \) sei dargestellt durch \( \left( t_i, \text{rank}(S_{i+1}) \right) \). Da wir alle anderen Suffixe oben schon sortiert haben ist \( \text{rank}(S_{i+1}) \) hier stets definiert.
+
+  Offensichtlich ist
+  \begin{equation*}
+    S_i \leq S_j \Leftrightarrow \left( t_i, \text{rank}(S_{i+1}) \right) \leq \left( t_j, \text{rank}(S_{j+1}) \right)\text{,}
+  \end{equation*}
+  also lassen sich die Paare Radix-sortieren.
+
+  Hier ist
+  \begin{equation*}
+    S_{12} < S_{6} < S_{9} < S_3 < S_0\text{,} \quad \text{weil} \quad \left( \texttt{0}, 0 \right) < \left( \texttt{a}, 5 \right) < \left( \texttt{a}, 7 \right) < \left( \texttt{b}, 2 \right) < \left( \texttt{x}, 1 \right)\text{.}
+  \end{equation*}
+
+  \item \textbf{Zusammenführen}. \quad Das Zusammenführen erfolgt vergleichsbasiert. Beim Vergleichen on \( S_i \in S_C \) mit \( S_j \in S_{B_0} \) unterscheiden wir zwei Fälle:
+  \begin{align*}
+    i \in B_1: \quad &S_i \leq S_j \Leftrightarrow \left( t_i, \text{rank}(S_{i+1}) \right) \leq \left( t_j, \text{rank}(S_{j+1}) \right) \\
+    i \in B_2: \quad &S_i \leq S_j \Leftrightarrow \left( t_i, t_{i+1}, \text{rank}(S_{i+2}) \right) \leq \left( t_j, t_{j+1}, \text{rank}(S_{j+2}) \right)
+  \end{align*}
+
+  Hier ist z.B. \( S_1 < S_6 \) weil \( \left( \texttt{a}, 4 \right) < \left( \texttt{a}, 5 \right) \) und \( S_3 < S_8 \) weil \( \left( \texttt{b}, \texttt{a}, 6 \right) < \left( \texttt{b}, \texttt{a}, 7 \right) \).
+\end{enumerate}
+
+\subsection{Suchen in Suffix-Arrays}
+
+Um ein Pattern in einem String zu finden, zu dem man das Suffix-Array konstruiert hat, muss man lediglich ein Suffix finden, dass das gesuchte Pattern als Präfix hat. Man kann so beispielsweise mit binärer Suche in \( O(m\log n) \) ein Vorkommen von \( P \) in \( T \) finden.
+
+Nutzen wir eine zusätzliche Struktur, das \term{LCP-Array}\index{LCP-Array} --- dieses speichert in \( \text{LCP}[i] \) die Länge des längsten gemeinsamen Präfixes von \( \text{SA}[i] \) und \( \text{SA}[i-1] \) --- so können wir die Suchzeit auf \( O(m + \log n) \) reduzieren.
+
+\begin{figure}[H]
+  \includegraphics[width=0.6\textwidth]{LCPArray}
+  \caption{Suffixe, Suffix-Array und LCP-Array des Strings ``\emph{banana}''}
+\end{figure}
+
+Um das LCP-Array berechnen zu können brauchen wir das \term{invertierte Suffix-Array}\index{Suffix-Array!invertiert}. Dieses gibt Aufschluss darüber, wo im Suffix-Array ein bestimmter Suffix steht. Offensichtlich ist \( \text{SA}^{-1}[\text{SA}[i]] = i \).
+
+Der Algorithmus sieht folgendermaßen aus (\( O(n) \)):
+
+\begin{pseudocode}
+  \textbf{\textsc{calculateLCPArray}} \( (\text{SA}^{-1}, \text{SA}) \) \\
+  \( h \coloneqq 0 \), \( \text{LCP}[1] \coloneqq 0 \) \\
+  \textbf{for} \( i = 1,\dots,n \) \textbf{do} \\
+  \phantom{\quad} \textbf{if} \( \text{SA}^{-1}[i] \neq 1 \) \textbf{then} \\
+  \phantom{\quad} \phantom{\quad} \textbf{while} \( t_{i+h} = t_{\text{SA}[\text{SA}^{-1}[i]-1]+h} \) \textbf{do} \( h \)++ \\
+  \phantom{\quad} \phantom{\quad} \( \text{LCP}[\text{SA}^{-1}[i]] \coloneqq h \) \\
+  \phantom{\quad} \phantom{\quad} \( h \coloneqq \max(0,h-1) \)
+\end{pseudocode}
+
 \subsection{Suffix-Bäume}
 
 Noch anschaulicher, allerdings wesentlich platzverbrauchender, sind \term{Suffix-Bäume}\index{Suffix-Baum} von Strings. Sie sind formal der \emph{kompaktierte Trie der Suffixe} und lassen sich (wenn auch sehr kompliziert) in \( O(n) \) berechnen.
@@ -150,3 +241,23 @@ Noch anschaulicher, allerdings wesentlich platzverbrauchender, sind \term{Suffix
     \caption{Beispiel für den Suffix-Baum des Strings ``\emph{banana}''}
   \end{figure}
 \end{minipage}
+
+``Naiv'' ist die Erstellung des Suffixbaums in \( O(n^2) \). Man kann ihn aber auch aus Suffix-Array und LCP-Array in Linearzeit konstruieren. Dazu hängt man die Suffixe sukzessive in der Tiefe ein, die ihr LCP-Wert angibt:
+
+\begin{figure}[H]
+  \includegraphics[width=0.8\textwidth]{buildSuffixTree}
+  \caption{Sukzessive Konstruktion des Suffix-Baums aus Suffix- und LCP-Array. Zuerst hängt man \$ und das erste Suffix (dessen LCP-Wert immer \( 0 \) ist) an die Wurzel. Anschließend nutzt man den LCP-Wert des darauffolgenden Suffixes (hier \( 1 \)), um festzulegen, wo der Suffix zum Baum hinzugefügt werden muss (durch Pfeile gekennzeichnet)}
+\end{figure}
+
+Die Suche in einem Suffix-Baum ist relativ simpel --- man muss lediglich den entsprechenden Kanten entlanglaufen, alle Vorkommen des Patterns liegen im entsprechenden Teilbaum.
+
+Zur Angabe der Komplexitäten sind zwei Fälle zu unterscheiden:
+
+\begin{enumerate}
+  \item Die ausgehenden Kanten sind als Arrays der Größe \( \left\vert \Sigma \right\vert \) gespeichert. Dann ist die Suchzeit in \textcolor{green!60!black}{\( O(m) \)} und der Gesamtplatzbedarf in \textcolor{red!80!black}{\( O(n\left\vert \Sigma \right\vert) \)}.
+  \item Die ausgehenden Kanten sind als Arrays gespeichert, deren Größe proportional zur Anzahl der Kinderknoten ist. Dann ist die Suchzeit in \textcolor{red!80!black}{\( O(m\log \left\vert \Sigma \right\vert ) \)} und der Gesamtplatzbedarf in \textcolor{green!60!black}{\( O(n) \)}.
+\end{enumerate}
+
+\section{Datenkompression}
+
+Eine Anwendung der Suffix-Arrays und -Trees ist die \term{Datenkompression}\index{Datenkompression}.
