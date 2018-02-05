@@ -10,6 +10,8 @@ Eine \term{range minimum Query}\index{range minimum query} gibt für ein array \
   \caption{Beispiel einer range minimum query}
 \end{figure}
 
+Ziel dieses Kapitels wird sein, einen Algorithmus anzugeben, mit dem eine RMQ-Abfrage in konstanter Zeit beantwortet werden kann, nachdem eine \( 2n + o(n) \) große Datenstruktur in Linearzeit vorbereitet wurde.
+
 Ein naiver Ansatz, um eine range minimum query auszuführen, ist, einfach das Array zu durchlaufen und das Minimum zu speichern (und wenn nötig zu aktualisieren). Dafür ist keine Vorbereitungsarbeit nötig (also \( O(1) \)) und die Abfrage ist in \( O(n) \). Wir notieren
 \begin{equation*}
   \left\langle O(1), O(n) \right\rangle\text{.}
@@ -86,3 +88,68 @@ Die Implementierung funktioniert so:
   \item Berechne alle \( s^2 \) Möglichkeiten aller \( \frac{1}{s+1} \binom{2s}{s} \) möglichen kartesischen Bäume der Größe \( s \) in einer Tabelle \( P \). Diese benötigt \( O(2^{2s}s^2) \) Speicher, also braucht \( P \) für \( s = \frac{\log n}{4} \) nur \( o(n) \) Speicher.
   \item Berechne nach Lösung \( 2 \) die Struktur für das Array \( A' \), welche aus den blockweisen Minima von \( A \) besteht (\( O(n) \) Zeit, \( O(n) \) Platz).
 \end{enumerate}
+
+\section{Lowest Common Ancestor}
+
+Gegeben sei ein Baum \( T \) mit Wurzel, \( \left\vert T \right\vert = n \). Es sei
+\begin{equation*}
+  \text{LCA}_T(v,w)
+\end{equation*}
+der \term{lowest common Ancestor}\index{lowest common ancestor} der Knoten \( v,w \) in \( T \), also der Knoten \( a \in T \), der
+\begin{itemize}
+  \item Vorgänger von \( v \) und \( w \) ist und
+  \item maximalen Abstand zur Wurzel hat.
+\end{itemize}
+
+\begin{figure}[H]
+  \includegraphics[width=0.6\textwidth]{LCA}
+  \caption{lowest common ancestor der Knoten \( h \) und \( j \) ist \( e \)}
+\end{figure}
+
+\subsection{Von RMQ zu LCA}
+
+\begin{lemma}
+  Gibt es eine \( \left\langle f(n),g(n) \right\rangle \)-Lösung für RMQ, so gibt es eine Lösung in
+  \begin{equation*}
+    \left\langle f(2n-1)+O(n),g(2n-1)+O(1) \right\rangle
+  \end{equation*}
+  für LCA.
+  \begin{proof}
+    Sei
+    \begin{itemize}
+      \item \( T \) der kartesische Baum des Arrays \( A \),
+      \item \( E[0,\dots,2n-2] \) das Knoten-Array, die in einer DFS-Euler-Tour von \( T \) besucht wurden,
+      \item \( L[0,\dots,2n-2] \) die entsprechende Tiefe der Knoten in \( E \),
+      \item \( R[0,\dots,n-1] \) ein Array mit \( R[i] = \min\left \{ j : E[j] = i \right \} \) für jeden Knoten \( i \in T \), also wo in der Euler-Tour der Knoten \( i \) das erste Mal auftaucht.
+    \end{itemize}
+    Dann ist
+    \begin{equation*}
+      \text{LCA}_T(v,w) = E[\text{RMQ}_L(\min\left \{ R[v],R[w] \right \}, \max\left \{ R[v],R[w] \right \})]\text{.}
+    \end{equation*} \qed \\
+    \begin{figure}[H]
+      \includegraphics[width=0.6\textwidth]{LCAConstruction}
+      \caption{Konstruktion der Hilfsarrays für LCA}
+    \end{figure}
+    \textcolor{red!80!black}{\textbf{Achtung}}: Die Tiefe zweier Knoten, die nacheinander bei der Euler-Tour besucht wurden, kann sich höchstens um 1 unterscheiden, also
+    \begin{equation*}
+      (L[i]-L[i+1]) \in \left \{ -1,1 \right \}\text{.}
+    \end{equation*}
+    Wir müssen also nur RMQs über Arrays lösen, bei denen sich zwei nacheinanderfolgende Elemente um 1 unterscheiden. Das ist das sogenannte \term{\( \pm 1 \)-RMQ}\index{\( \pm 1 \)-RMQ}.
+  \end{proof}
+\end{lemma}
+
+Wir werden nun im Folgenden ausnutzen, dass wir zum Lösen des LCA-Problems nur \( \pm 1 \)-RMQs betrachten müssen.
+
+\subsection{LCA in \( \left\langle O(n),O(1) \right\rangle \) auf \( 4n+o(n) \) Bits}
+
+Wir verwenden folgende Konstuktion:
+
+\begin{itemize}
+  \item \textbf{Kartesischen Baum bauen}. \quad Wir gehen das Array \( A \) von links nach rechts durch und fügen die Elemente sukzessive dem Baum hinzu. Dabei sind stets die Regeln für einen kartesischen Baum einzuhalten, also
+  \begin{itemize}
+    \item \emph{Wurzel} des Baums ist das (linkste) kleinste Element \( m \) des Arrays.
+    \item Die Wurzel hat zwei Kindknoten --- die Wurzel des linken und die Wurzel des rechten Subarrays von \( A \) (jeweils von \( m \) aus).
+    \item Rekursion.
+  \end{itemize}
+  \item \textbf{Dummy-Blätter hinzufügen}. \quad An jeden Knoten des Baums hängen wir ein Dummy-Blatt.
+\end{itemize}
