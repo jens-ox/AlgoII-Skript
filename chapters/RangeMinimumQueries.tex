@@ -152,4 +152,52 @@ Wir verwenden folgende Konstuktion:
     \item Rekursion.
   \end{itemize}
   \item \textbf{Dummy-Blätter hinzufügen}. \quad An jeden Knoten des Baums hängen wir ein Dummy-Blatt.
+  \item \textbf{DFS}. \quad Wir konstruieren eine Sequenz an Klammern, indem wir ein DFS durchführen. Traversieren wir einen Knoten das erste Mal, so setzen wir ``('', beim zweiten Mal ``)''. In einem Blatt drehen wir um und setzen daher direkt beide Klammern. \\
+
+  Wir können die Klammernfolge in \( 4n \) Bits speichern, indem wir ``('' durch \texttt{1} und ``)'' durch \texttt{0} repräsentieren.
+
+  \begin{figure}[H]
+    \includegraphics[width=0.8\textwidth]{DFSLCA}
+    \caption{Konstruktion des kartesischen Baums mit Dummy-Blättern (blau) für das Array ``463514645236''. Anschließend wird die Klammernfolge gebildet. In blau hervorgehoben sind die ``Wendepunkte'', also die Dummy-Blätter, und ihr Index}
+  \end{figure}
+
+  \item \textbf{RMQ berechnen}. \quad Zur Berechnung von \( \text{rmq}_A(l,r) \) brauchen wir drei Hilfsfunktionen:
+  \begin{itemize}
+    \item \( \text{rank}(\texttt{pos}, \texttt{char}, \text{BP}_{\text{ext}}) \) gibt die Anzahl an Vorkommisse von \texttt{char} (z.B. ``)'') bis \texttt{pos} in \( \text{BP}_{\text{ext}} \) an.
+    \item \( \text{excess}(i) = \text{rank}(i+1, \texttt{(}, \text{BP}_{\text{ext}}) - \text{rank}(i+1, \texttt{)}, \text{BP}_{\text{ext}}) \)
+    \item \( \text{select}(j, \texttt{char}, \text{BP}_{\text{ext}}) \) gibt die Position des \( j \)-ten Vorkommens von \texttt{char} in \( \text{BP}_{\text{ext}} \) an.
+  \end{itemize}
+  Wir können nun den RMQ-Wert folgendermaßen berechnen:
+
+  \begin{pseudocode}
+    \textbf{\textsc{rmq}} (A,l,r) \\
+    lpos \( \coloneqq \text{select}(l+1, \texttt{()}, \text{BP}_{\text{ext}}) \) \\
+    rpos \( \coloneqq \text{select}(r+1, \texttt{()}, \text{BP}_{\text{ext}}) \) \\
+    \textbf{return} \( \text{rank} (\text{rmq}^{\pm 1}_{\text{excess}}(\text{lpos}, \text{rpos} + 1), \texttt{()}, \text{BP}_{\text{ext}}) \)
+  \end{pseudocode}
 \end{itemize}
+
+\subsection{LCA in \( \left\langle O(n),O(1) \right\rangle \) auf \( 2n+o(n) \) Bits}
+
+Die Anzahl an benötigten Bits lässt sich im Vergleich zum vorhergehenden Ansatz noch weiter verkleinern. Wir transformieren dazu den kartesischen Baum --- der ja ein Binärbaum ist --- in einen allgemeinen Baum. Dazu gehen wir folgendermaßen vor:
+
+\begin{enumerate}
+  \item Füge einen Elternknoten zur Wurzel des Baums hinzu (der hinzugefügte Knoten ist also die neue Wurzel).
+  \item Nehme von jedem Knoten \( v \) --- von der neuen Wurzel ausgehend --- den rechten Kindknoten \( w \), und füge alle Knoten auf dem linkesten Pfad von \( w \) ausgehend zu den Kindknoten von \( v \) hinzu.
+\end{enumerate}
+
+\begin{figure}[H]
+  \includegraphics[width=\textwidth]{CartesianTreeTransform}
+  \caption{Kartesischer Baum mit neuer Wurzel. Die roten Knoten in der ersten Grafik sind die Knoten, die zu \( v \) --- hier die neue Wurzel --- hinzugefügt werden. Durch Hinzufügen dieser Knoten zu den Kindknoten von \( v \) hat der Baum die Struktur in Grafik 2. Nun wird dieser Prozess rekursiv auf die drei roten Knoten ausgeführt. Ist die Rekursion vollständig abgeschlossen sieht der Baum wie in der dritten Grafik aus}
+\end{figure}
+
+Diese Transformation lässt sich bei Bedarf auch rückgängig machen; man kann also, wenn nötig, wieder den Binärbaum konstruieren.
+
+Nun lässt sich wieder die Klammernreihe \( \text{BP} \) von oben bauen. Mit dieser können wir nun RMQ-Abfragen lösen:
+
+\begin{pseudocode}
+  \textbf{\textsc{rmq}} (A,l,r) \\
+  lpos \( \coloneqq \text{select}(l+2, \texttt{(}, \text{BP}) \) \\
+  rpos \( \coloneqq \text{select}(r+2, \texttt{(}, \text{BP}) \) \\
+  \textbf{return} \( \text{rank}(\text{rmq}_{\text{excess}}^{\pm 1}(\text{lpos} - 1, \text{rpos}), \texttt{(}, \text{BP}) -1 \)
+\end{pseudocode}
