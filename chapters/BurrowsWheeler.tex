@@ -228,3 +228,19 @@ Wir suchen nun nach \( P \) in BWT. Wir suchen rückwärts, starten also mit ``\
 Wir brauchen also nur \( C \) und \( R \), um Abfragen zu Existenz und Anzahl eines Patterns machen zu können. Die Ausführungszeit ist in \( O(m*t_{\text{rank}}) \), wobei \( t_{\text{rank}} \) die Ausführungszeit einer rank-Operation ist.
 
 Als nächstes werden wir uns damit beschäftigen, wie wir die rank-Operation implementieren können. Wir werden dazu \emph{wavelet trees}\footnote{Grossi \& Vitter, 2003} verwenden.
+
+\section{Wavelet Trees}
+
+\term{Wavelet Trees}\index{Wavelet Tree} erlauben ein schnelles Berechnen der rank-Operation. Dazu wird in einem Baum codiert, ob ein bestimmter Buchstabe des Strings (hier des BWT) in der oberen oder der unteren Hälfte des Alphabets liegt. So werden die Buchstaben des BWT einem Kindknoten zugeordnet, wo auf dem jeweiligen Teilalphabet erneut eine Zweiteilung stattfindet. Dieser Prozess wiederholt sich so lange, bis in jedem Blatt nur Zeichen einer Art stehen.
+
+\begin{figure}[H]
+  \includegraphics[width=0.8\textwidth]{WaveletTree}
+  \caption{Wavelet Tree einer BWT und zugehörige Berechnung von \( \text{rank}(11, \textsc{a}, \text{BWT}) \)}
+\end{figure}
+
+Abfragen können auf einem Wavelet Tree in konstanter Zeit durchgeführt werden. Der Wavelet Tree selbst benötigt \( o(n) \) viel Platz, genauer
+\begin{equation*}
+  O\left( \frac{n}{\log n} + \frac{n \log \log n}{\log n} + \sqrt{n}\log n \log\log n \right)\text{.}
+\end{equation*}
+
+Die Konstruktion des Wavelet-Trees ist nicht zwingend an die Unterteilung des BWT zwei lexikographische Teilalphabete gebunden. Beispielsweise lässt sich eine Unterteilung in zwei Teilwörter auch durch die Häufigkeit der Buchstaben konstruieren, wodurch ein \term{Huffman-Wavelet-Tree}\index{Wavelet Tree!Huffman} entsteht.
