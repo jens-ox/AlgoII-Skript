@@ -191,7 +191,8 @@ Die \term{Huffman-Kodierung}\index{Kodierung!Huffman} erzeugt präfixfreie Codes
 Wir möchten nun in \( T^{\text{BWT}} \) nach einem Pattern \( P \) suchen. Hier sei
 \begin{align*}
   P &= \texttt{bar} \quad \text{und} \\
-  T &= \texttt{abracadabrabarbara\$}\text{.}
+  T &= \texttt{abracadabrabarbara\$}\quad\text{und somit} \\
+  \text{BWT} &= \texttt{arrd\$rcbbraaaaaabba}
 \end{align*}
 Wir benötigen dazu zwei Hilfsmittel:
 
@@ -199,3 +200,31 @@ Wir benötigen dazu zwei Hilfsmittel:
   \item Das Array \( C \) beinhalte für jeden eindeutigen Buchstaben in \( t \in T \) die Position des ersten Suffixes im Suffix-Array, das mit \( t \) beginnt.
   \item \( \text{rank}(i,X,\text{ BWT}) \) gibt an, wie oft ein Buchstabe \( X \) in \( \text{BWT}[0,\dots,i-1] \) vorkommt.
 \end{itemize}
+
+Wir suchen nun nach \( P \) in BWT. Wir suchen rückwärts, starten also mit ``\texttt{r}''. Dazu ermitteln wir alle Suffixe, die mit \texttt{r} starten. Wir nutzen dazu \( C \) und rank:
+
+\begin{itemize}
+  \item Initiales Intervall: \( [\text{sp}_0, \text{ep}_0] = [0,\dots,n-1] \).
+  \item Ermittle Intervall der Suffixe, die mit \texttt{r} starten:
+  \begin{itemize}
+    \item \( \text{sp}_1 = C[r] + \text{rank}(\text{sp}_0, \texttt{r}, \text{BWT}) = 15 + \text{rank}(0,\texttt{r}, \text{BWT}) = 15+0 = 15 \)
+    \item \( \text{ep}_1 = C[r] + \text{rank}(\text{ep}_0 + 1, \texttt{r}, \text{BWT}) - 1 = 15 + 4 - 1 = 18 \)
+  \end{itemize}
+\end{itemize}
+
+\begin{minipage}{.7\textwidth}
+  Wir suchen nun analog nach ``\texttt{ar}'', indem wir \( \text{sp}_2 \) und \( \text{ep}_2 \) aus \( \text{sp}_1 \) und \( \text{ep}_1 \) berechnen. Das Ganze dann nochmal für ``\texttt{bar}'' und wir erhalten 9 und 10 als diejenigen Suffixe, die mit \texttt{bar} anfangen.
+\end{minipage}
+\hfill
+\begin{minipage}{.25\textwidth}
+  \begin{figure}[H]
+    \includegraphics[width=\textwidth]{BWTSearch}
+    \caption{Intervall \( [\text{sp}_1, \text{ep}_1] \)}
+  \end{figure}
+\end{minipage}
+
+\subsection{Zusammenfassung}
+
+Wir brauchen also nur \( C \) und \( R \), um Abfragen zu Existenz und Anzahl eines Patterns machen zu können. Die Ausführungszeit ist in \( O(m*t_{\text{rank}}) \), wobei \( t_{\text{rank}} \) die Ausführungszeit einer rank-Operation ist.
+
+Als nächstes werden wir uns damit beschäftigen, wie wir die rank-Operation implementieren können. Wir werden dazu \emph{wavelet trees}\footnote{Grossi \& Vitter, 2003} verwenden.
