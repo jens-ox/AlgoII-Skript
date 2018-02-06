@@ -185,3 +185,17 @@ Die \term{Huffman-Kodierung}\index{Kodierung!Huffman} erzeugt präfixfreie Codes
   \includegraphics[width=0.6\textwidth]{Huffman}
   \caption{MTF-Kodierung \( R \) von \( T \), die Häufigkeit der in \( R \) vorkommenden Symbole und die mit dem Huffman-Baum erzeugten Codes}
 \end{figure}
+
+\section{Suche in der Burrows-Wheeler-Transformation}
+
+Wir möchten nun in \( T^{\text{BWT}} \) nach einem Pattern \( P \) suchen. Hier sei
+\begin{align*}
+  P &= \texttt{bar} \quad \text{und} \\
+  T &= \texttt{abracadabrabarbara\$}\text{.}
+\end{align*}
+Wir benötigen dazu zwei Hilfsmittel:
+
+\begin{itemize}
+  \item Das Array \( C \) beinhalte für jeden eindeutigen Buchstaben in \( t \in T \) die Position des ersten Suffixes im Suffix-Array, das mit \( t \) beginnt.
+  \item \( \text{rank}(i,X,\text{ BWT}) \) gibt an, wie oft ein Buchstabe \( X \) in \( \text{BWT}[0,\dots,i-1] \) vorkommt.
+\end{itemize}
