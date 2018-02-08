@@ -244,3 +244,125 @@ Abfragen können auf einem Wavelet Tree in konstanter Zeit durchgeführt werden.
 \end{equation*}
 
 Die Konstruktion des Wavelet-Trees ist nicht zwingend an die Unterteilung des BWT zwei lexikographische Teilalphabete gebunden. Beispielsweise lässt sich eine Unterteilung in zwei Teilwörter auch durch die Häufigkeit der Buchstaben konstruieren, wodurch ein \term{Huffman-Wavelet-Tree}\index{Wavelet Tree!Huffman} entsteht.
+
+\section{Exkurs --- Succinct Data Structures}
+
+Eine extrem platzeffiziente Datenstruktur, \term{succinct data structure}\index{succinct data structure} genannt, benötigt nur wenig mehr Platz als die informationstheoretische untere Grenze, unterstützt allerdings Operationen zeiteffizient.
+
+Sei \( L \) die informationstheoretische untere Schranke, die zur Repräsentierung einer Klasse von Objekten benötigt wird. Eine Datenstruktur, die Operationen trotzdem zeiteffizient unterstützt, heißt
+\begin{itemize}
+  \item \emph{implicit}, falls sie \( L + O(1) \) Bits Platz braucht (also nur konstant mehr als die informationstheoretische untere Schranke, z.B. Heap),
+  \item \emph{succinct}, falls sie \( L + o(L) \) Bits Platz braucht (also nur sublinear mehr als die informationstheoretische untere Schranke, z.B. Baum),
+  \item \emph{compact}, falls sie \( O(L) \) Bits Platz braucht. 
+\end{itemize}
+
+\subsection{Binärbäume --- succinct}
+
+Es gibt \( C_n = \frac{1}{n+1}\binom{2n}{n} \) Binärbäume auf \( n \) Knoten. Um einen Binärbaum auf \( n \) Knoten speichern zu können, brauchen wir \( \log C_n = 2n + o(n) \) bits.\footnote{Das kann mithilfe der Sterling-Approximation gezeigt werden.} Wir wollen folgende Operationen unterstützen:
+\begin{itemize}
+  \item \( \text{parent}(v) \)
+  \item \( \text{leftchild}(v) \)
+  \item \( \text{rightchild}(v) \)
+\end{itemize}
+
+Eine mögliche Kodierung wäre, zu jedem Knoten des Baumes, der kein Blatt ist, so viele imaginäre Knoten hinzuzufügen, dass der jeweilige Knoten zwei Kinder hat (also entweder, 0, 1 oder 2 imaginäre Knoten). Diesen Prozess führt man durch, bis alle Blätter des Baumes dieselbe Tiefe haben. Wir können nun alle Knoten durchnummerieren und pro Knoten in einem Bit-Array speichern, ob der Knoten real (=1) ist oder nicht (=0).
+
+\begin{figure}[H]
+  \includegraphics[width=0.5\textwidth]{SuccinctBinaryTree}
+  \caption{Die schwarzen Knoten sind die realen Knoten des Baumes, die grauen die imaginären}
+\end{figure}
+
+Die geforderten Operationen können hier sehr einfach implementiert werden:
+\begin{itemize}
+  \item \( \text{parent}(v) = \left\lfloor \frac{v-1}{2} \right\rfloor \) (für \( v \neq \) Wurzel)
+  \item \( \text{leftchild}(v) = 2v + 1 \)
+  \item \( \text{rightchild}(v) = 2v + 2 \)
+\end{itemize}
+
+Problem dieses Ansatzes ist, dass für einen Binärbaum mit einer Maximaltiefe \( d \) stets \( 2^d \) Bits benötigt werden.
+
+Jacobson schlug 1989 einen besseren Algorithmus vor:
+
+\begin{enumerate}
+  \item Alle Knoten des Binärbaums mit \( 1 \) markieren.
+  \item Kinder jedes Knotens im Baum mit imaginären Knoten auf \( 2 \) ergänzen.
+  \item Bit-Markierungen wie im vorhergehenden Algorithmus ablesen.
+\end{enumerate}
+
+Benötigt wird eine weitere Operation \( \text{rank}(i, \texttt{type}, b) \), die für Knoten \( i \) des ergänzten Baums \( b \) zurückgibt, um den wievielten Knoten des Typs \texttt{type} es sich handelt. Wir erhalten folgendes Resultat:
+
+\begin{figure}[H]
+  \includegraphics[width=.6\textwidth]{SuccinctBinaryTree2}
+  \caption{Jacobson-Kodierung eines Binärbaums}
+\end{figure}
+
+Wir können hiermit also einen Binärbaum mit einem Bit-Array der Länge \( 2n + 1 \) (mit \( n \) gesetzten Bits) repräsentieren. Die gewünschten Operationen funktionieren hier so:
+
+\begin{itemize}
+  \item \( \text{leftchild}(v) = 2\text{rank}(v) + 1 \)
+  \item \( \text{rightchild}(v) = 2\text{rank}(v) + 2 \)
+  \item \( \text{parent}(v) =  \) auch in konstanter Zeit möglich\footnote{Übungsaufgabe!}
+\end{itemize}
+
+Der totale Platzverbrauch inklusive rank ist also \( 2n + o(n) \) Bits.
+
+
+\subsection{Bäume --- succinct: LOUDS}
+
+Die Abkürzung \emph{LOUDS} steht für \term{level order unary degree sequence}\index{LOUDS}.
+
+Die Implementierung funktioniert so:
+
+\begin{enumerate}
+  \item Füge über der Wurzel des Baums eine Pseudo-Wurzel hinzu und verbinde sie nur mit der alten Wurzel.
+  \item Der Ausgangsgrad wird zu jedem Knoten unär\footnote{Ausgangsgrad \( x \): \( x \) mal \texttt{0}, hintendran immer noch eine \texttt{1}.} codiert dazugeschrieben.
+\end{enumerate}
+
+Die \term{LOUDS-Sequenz}\index{LOUDS!Sequenz} ist nun die Konkatenantion der Knotenmarkierungen (sortiert nach Level).
+
+\begin{figure}[H]
+  \includegraphics[width=0.5\textwidth]{LOUDS}
+  \caption{Allgemeiner Baum mit Pseudo-Wurzel, Knotenmarkierungen und LOUDS-Sequenz}
+\end{figure}
+
+Die Konstruktion verursacht, dass --- abgesehen von der Wurzel --- jeder Knoten zweimal in der LOUDS-Sequenz vorkommt: einmal als \texttt{0} in der Kinder-Liste seines Elternknotens und einmal als terminierende \texttt{1} in seiner eigenen Kinder-Liste.
+
+Der gesamte Platzverbrauch hiervorn ist \( 2n + 1 + o(n) \) Bits. Außerdem lassen sich alle gewünschten Operationen in konstanter Zeit implementieren:
+
+\ \\ 
+
+\begin{minipage}{.475\textwidth}
+  \begin{pseudocode}
+    \textbf{\textsc{isLeaf}}\( (v) \) \\
+    id \( \coloneqq \text{rank}(v, 0, \text{LOUDS}) \) \\
+    \( p \coloneqq \text{select}(\text{id} + 2, 1, \text{LOUDS}) \) \\
+    \textbf{return} \( \text{LOUDS}[p-1] == 1 \) \\
+  \end{pseudocode}
+\end{minipage}
+\hfill
+\begin{minipage}{.475\textwidth}
+  \begin{pseudocode}
+    \textbf{\textsc{outDegree}}\( (v) \) \\
+    \textbf{if} \textsc{isLeaf}\( (v) \) \textbf{then return} \( 0 \) \\
+    \( \text{id} \coloneqq \text{rank}(v,0,\text{LOUDS}) \) \\
+    \textbf{return} \( \text{select}(\text{id}+2,1,\text{LOUDS}) - \) \\ \phantom{\textbf{return}} \( \text{select}(\text{id} + 1, 1, \text{LOUDS}) - 1 \)
+  \end{pseudocode}
+\end{minipage}
+
+\begin{minipage}{.475\textwidth}
+  \begin{pseudocode}
+    \textbf{\textsc{child}}\( (v,i) \) \\
+    \textbf{if} \( i < \textsc{outDegree}(v) \) \textbf{then} \\ \phantom{\enskip} \textbf{return} \( \perp \) \\
+    \( \text{id} \coloneqq \text{rank}(v,0,\text{LOUDS}) \) \\
+    \textbf{return} \( \text{select}(\text{id} + 1, 1, \text{LOUDS}) + i \)
+  \end{pseudocode}
+\end{minipage}
+\hfill
+\begin{minipage}{.475\textwidth}
+  \begin{pseudocode}
+    \textbf{\textsc{parent}}\( (v) \) \\
+    \textbf{if} \( \textsc{isRoot}(v) \) \textbf{then} \\ \phantom{\enskip} \textbf{return} \( \perp \) \\
+    \( \text{pid} \coloneqq \text{rank}(v,1,\text{LOUDS}) \) \\
+    \textbf{return} \( \text{select}(\text{pid},0,\text{LOUDS}) \)
+  \end{pseudocode}
+\end{minipage}
