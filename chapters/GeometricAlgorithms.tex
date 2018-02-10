@@ -207,3 +207,43 @@ Das konstruieren der oberen Hülle nennt sich auch \term{Graham's Scan}\index{Gr
 \end{pseudocode}
 
 Der Algorithmus selbst läuft in \( O(n) \), weswegen das Sortieren dominiert und das ganze in \( O(n\log n) \) liegt.
+
+\section{Kleinste einschließende Kugel}
+
+In diesem Abschnitt ist eine Punktmenge \( P \coloneqq \left \{ p_1, \dots, p_n \right \} \subset \R^d \) gegeben und eine Kugel \( K \) mit minimalem Radius gesucht, sodass \( P \subset K \). Wir verwenden einen Algorithmus in \( O(n) \) nach Welzl.\footnote{Welzl, 1991}
+
+\( Q \) sei zu Beginn leer. Wir fügen Punkte derart zu \( Q \) hinzu, dass durch die Punkte in \( Q \) ein Ball aufgespannt wird, in dem alle \( p \in P \) liegen.
+
+\begin{pseudocode}
+  \textbf{\textsc{sEB}}\( (P,Q) \) \\
+  \textbf{if} \( \left\vert P \right\vert = 0 \vee \left\vert Q \right\vert = d + 1 \) \textbf{then return} ball(\( Q \)) \\
+  \( x \coloneqq p \in P \) picked at random \\
+  \( B \coloneqq \text{sEB}(P \setminus \left \{ x \right \}, Q) \) \\
+  \textbf{if} \( x \in B \) \textbf{then return} \( B \) \\
+  \textbf{return} sEB(\( P \setminus \left \{ x \right \}, Q \cup \left \{ x \right \} \))
+\end{pseudocode}
+
+\section{Range Search}
+
+Beim \term{Range Search}\index{Range Search} (Bereichssuche) haben wir wieder eine Menge \( P = \left \{ p_1, \dots, p_n \right \} \subset \R^2 \) gegeben. Wir erhalten als Anfrage nun ein achsenparalleles Rechteck
+\begin{equation*}
+  Q \coloneqq [x,x'] \times [y,y']\text{.}
+\end{equation*}
+Gesucht ist nun entweder \( P \cap Q \) (\emph{range reporting}) oder \( k \coloneqq \left\vert P \cap Q \right\vert \) (\emph{range counting}).
+
+Wir werden range counting in \( O(\log n) \) und range reporting in \( O(k+\log n) \) lösen. Dazu ist \( O(n\log n) \) Vorverarbeitungszeit und \( O(n) \) Platz notwendig.
+
+\subsection{Range Search im Eindimensionalen}
+
+\begin{minipage}{.55\textwidth}
+  Zuerst machen wir einen range search in einer Dimension. Dazu konstruieren wir im Voraus einen binören Suchbaum. Dieser codiert pro Blatt das größte Element des linken Teilbaums. So können die beiden Grenzen leicht gefunden werden.
+  \vspace*{1em}
+\end{minipage}
+\hfill
+\begin{minipage}{.4\textwidth}
+  \begin{figure}[H]
+    \includegraphics[width=\textwidth]{bst}
+    \caption{Ermittlung des ersten Elements, das größer als \( 6 \) ist}
+  \end{figure}
+  \vspace*{1em}
+\end{minipage}
