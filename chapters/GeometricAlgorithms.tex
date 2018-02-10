@@ -161,3 +161,49 @@ Nun können wir den Algorithmus implementieren.
 \end{pseudocode}
 
 Dieser Algorithmus benötigt \( O(n\log n) \) zur Initialisierung und \( O((n+k)\log n) \) für die Event-Schleife, insgesamt also \( O((n+k)\log n) \).
+
+\section{Konvexe Hülle}
+
+Wir werden uns in diesem Abschnitt mit dem folgenden Problem beschäftigen:
+
+Gegeben sei eine Punktmenge \( P = \left \{ p_1, \dots, p_n \right \} \subset R^2 \). Gesucht ist ein konvexes Polygon \( C \) mit Eckpunkten \( \in P \), sodass alle Punkte von \( P \) in \( C \) liegen.
+
+Zuerst sortieren wir \( P \) lexikographisch. Das bedeutet, dass
+\begin{equation*}
+  p > q \Leftrightarrow p\text{.}x > q\text{.}x \vee \left( p\text{.}x = q\text{.}x \wedge p\text{.}y > q\text{.}y \right)\text{.}
+\end{equation*}
+
+\begin{minipage}{.475\textwidth}
+  \vspace*{1em}
+  Wir berechnen ohne Einschränkung nur die obere Hülle, also die Hülle um die Punkte oberhalb von \( \overline{p_1 p_n} \).
+  \vspace*{1em}
+\end{minipage}
+\hfill
+\begin{minipage}{.475\textwidth}
+  \vspace*{1em}
+  \begin{figure}[H]
+    \includegraphics[width=\textwidth]{upperHull}
+    \caption{Obere Hülle}
+  \end{figure}
+  \vspace*{1em}
+\end{minipage}
+
+Wir können beobachten, dass die obere Hülle ausschließlich Abbiegungen nach rechts macht (und die untere nur Abbiegungen nach links). Um damit arbeiten zu können müssen wir Abbiegungen definieren:
+
+\begin{definition}[Abbiegung]
+  Für eine Punktemenge \( P = \left \{ p_1, \dots, p_n \right \} \) ist eine \term{Abbiegung nach rechts}\index{Abbiegung} an Stelle \( i \) vorhanden, falls \( p_{i+1} \) rechts von \( \overline{p_{i-1}p_i} \) liegt.
+\end{definition}
+
+Das konstruieren der oberen Hülle nennt sich auch \term{Graham's Scan}\index{Graham's Scan}.\footnote{Graham 1972, Andrew 1979}
+
+\begin{pseudocode}
+  \textbf{\textsc{upperHull}}\( (p_1,\dots,p_n) \) \\
+  \( L \coloneqq \left\langle p_n,p_1,p_2 \right\rangle \): Stack \textbf{of} Point \\
+  \textbf{invariant} \( L \) is upper hull of \( \left\langle p_n,p_1,\dots,p_i \right\rangle \) \\
+  \textbf{for} \( i \coloneqq 3 \) \textbf{to} \( n \) \textbf{do} \\
+  \phantom{\enskip} \textbf{while} \( \neg \text{rightTurn}(L\text{.secondButlast},  L\text{.last}, p_i) \) \textbf{do} \( L\text{.pop} \) \\
+  \phantom{\enskip} \( L \coloneqq L \circ \left\langle p_i \right\rangle \) \\
+  \textbf{return} \( L \)
+\end{pseudocode}
+
+Der Algorithmus selbst läuft in \( O(n) \), weswegen das Sortieren dominiert und das ganze in \( O(n\log n) \) liegt.
