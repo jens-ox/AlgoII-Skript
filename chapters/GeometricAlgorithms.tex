@@ -247,3 +247,25 @@ Wir werden range counting in \( O(\log n) \) und range reporting in \( O(k+\log 
   \end{figure}
   \vspace*{1em}
 \end{minipage}
+
+\subsection{Range Search im Zweidimensionalen --- Erster Ansatz}
+
+Ein naives Verfahren ist es, die Punkte aus \( P \) in zwei Arrays \( A_x \) und \( A_y \) zu speichern, wobei die Punkte in \( A_x \) nach \( x \)-Wert und in \( A_y \) nach \( y \)-Wert sortiert sind.
+
+Man bestimmt nun
+\begin{align*}
+  k_x &\coloneqq \text{count}(x_0,x_1) \text{ in } A_x \quad \text{(alle Punkte mit \( x_0 < x < x_1 \))} \text{ und} \\
+  k_y &\coloneqq \text{count}(y_0, y_1) \text{ in } A_y \quad \text{(alle Punkte mit \( y_0 < y < y_1 \))} \text{.}
+\end{align*}
+
+Nun müssen noch \( \min\left \{ k_x,k_y \right \} \) Punkte gematcht werden, um zu überprüfen, dass der jeweilige Punkt sowohl im \( x \)- als auch im \( y \)-Wert im Rechteck liegt.
+
+Insgesamt braucht dieser Ansatz also \( O(\log n) + O(\min\left \{ k_x,k_y \right \}) \) Zeit, ist also nicht wirklich brauchbar.
+
+\subsection{Range Search im Zweidimensionalen --- Zweiter Ansatz}
+
+Wir konsturieren nun einen balancierten Binärbaum mithilfe der \( x \)-Koordinaten. Anschließend berechnen wir die \( O(\log n) \) Teilbäume, die zusammen alle Punkte mit \( x_0 \leq x \leq x_1 \) enthalten. Nun müssen diese nur noch nach \( y \)-Koordinate gefiltert werden. Wir speichern dazu in jedem Knoten die Punkte ab, die in seinem Teilbaum liegen, sortiert nach \( y \)-Wert.
+
+Insgesamt können wir so den Algorithmus auf \( O(\log^2 n + k) \) drücken.
+
+Mithilfe von Wavelet Trees lässt sich die Zeit auf \( O(\log n) \) reduzieren.
