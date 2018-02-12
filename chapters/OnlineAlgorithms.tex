@@ -150,3 +150,16 @@ Frühere Analysen ergeben, dass der Wettbewerbsfaktor höchstens \( 2 \) ist. De
   \phantom{\enskip} assign job to machine \( a_j \)
 \end{pseudocode}
 
+\section{Skiausleihe}
+
+Wir haben oben bereits diskutiert, was hier das Problem ist.
+
+Die Optimalkosten sind offensichtlich
+\begin{itemize}
+  \item Falls Urlaubsdauer \( t \leq \frac{K}{k} \) Tage: \( t \) mal ausleihen \( \Rightarrow \) Kosten \( tk \)
+  \item Falls Urlaubsdauer \( t > \frac{K}{k} \) Tage: Ski sofort kaufen \( \Rightarrow \) Kosten \( K \)
+\end{itemize}
+
+Der Wettbewerbsfaktor ist hier \( 2 \). Optimal ist es, an Tag \( \frac{K}{k} \) die Ski zu kaufen.
+
+% TODO warum? Wird in der Übung gesagt
