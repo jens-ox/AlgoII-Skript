@@ -1,1 +1,123 @@
 \chapter{Online-Algorithmen}
+
+\begin{tcolorbox}[colframe=black!3!white]
+  \textbf{Inhalt dieses Kapitels}:
+  \tcblower{} 
+  \begin{itemize}
+    \item Einführung in Online-Algorithmen
+    \item Beispiel: Job-Scheduling
+    \item Beispiel: Skiausleihe
+    \item Beispiel: Speicherverwaltung
+    \item Beispiel: Auswahl von Experten
+  \end{itemize}
+\end{tcolorbox}
+
+\term{Online-Algorithmen}\index{Online-Algorithmen} werden verwendet, wenn Eingabegrößen nicht im Vornerein bekannt sind. Viele Algorithmen, die wir bisher diskutiert haben, benötigen Vorarbeitszeit, um optimale Ergebnisse liefern zu können, und sind daher nicht auf Probleme anwendbar, wo die Eingabe in serieller Natur vorliegt. Die bisher diskutierten Algorithmen werden daher auch \term{Offline-Algorithmen}\index{Offline-Algorithmen} genannt.
+
+\section{Übersicht}
+
+Wir werden uns im Folgenden Konzepte von Online-Algorithmen anhand von Beispielen anschauen. Zuerst definieren wir, was ein Online-Algorithmus formal ist.
+
+\begin{itemize}
+  \item \textbf{Eingabe}: Folge von Anforderungen (\emph{requests})
+  \begin{equation*}
+    \sigma = \left( r_1,\dots, r_n \right) \in R^n
+  \end{equation*}
+  \item \( r_i \) muss auf Anforderung bearbeitet werden, es entsteht eine Antwort
+  \begin{equation*}
+    a_i = g_i(r_1, \dots,r_i) \in A\text{.}
+  \end{equation*}
+  Es sind keine Informationen über die Zukunft verfügbar (\( r_{i+1},\dots \)). Antworten sind unwiderruflich.
+
+  Der konkrete Algorithmus ist also durch \( g_1,\dots \) eindeutig festgelegt.
+
+  \item \textbf{Kosten} \( \text{cost}_n : R^n \times A^n \to \R_{> 0} \)
+
+  \item \textbf{Ausgabe} für \( \sigma \in R^n \) ist also
+  \begin{equation*}
+    \textsc{alg}[\sigma] = \left( g_1(r_1),g_2(r_1,r_2),\dots,g_n(r_1,\dots,r_n) \right) \in A^n
+  \end{equation*}
+  und die Kosten
+  \begin{equation*}
+    \textsc{alg}(\sigma) = \text{cost}_n(\sigma,\textsc{alg}[\sigma])
+  \end{equation*}
+\end{itemize}
+
+\subsection{Kompetitive Analyse}
+
+Um einschätzen zu können, wie gut ein Online-Algorithmus ist, vergleichen wir ihn mit einem optimalen Offline-Algorithmus --- das ist die \term{Kompetitive Analyse}\index{Kompetitive Analyse} dieses Online-Algorithmus.
+
+\begin{definition}[c-kompetitiv]
+  Ein Online-Algorithmus ist für ein Optimierungsproblem auf Input \( \sigma \) \term{\( c \)-kompetitiv}\index{kompetitiv!c}, falls es einen Offline-Algorithmus OPT gibt, der nach einem Kostenmaß \( \text{OPT}(\sigma) \) eine Optimallösung berechnen kann, sodass für den betrachteten Online-Algorithmus ALG und alle Eingabesequenzen \( \sigma \) gilt:
+  \begin{equation*}
+    \text{ALG}(\sigma) \leq c*\text{OPT}(\sigma) + \alpha\text{.}
+  \end{equation*}
+  Ist die zusätzliche Konstante \( \alpha \leq 0 \), dann heißt ALG \term{strikt \( c \)-kompetitiv}\index{kompetitiv!strikt c}. 
+
+  Unterschied ist, dass man bei nicht-strikter kompetitivität Ausnahmen erlaubt.
+\end{definition}
+
+Wir können nun den \term{Wettbewerbsfaktor}\index{Wettbewerbsfaktor} (\emph{competitive ratio}) für den Algorithmus ALG definieren als
+
+\begin{equation*}
+  c_{\textsc{alg}} = \sup\left \{ \frac{\textsc{alg}(\sigma)}{\textsc{opt}(\sigma)} : \sigma \in R^+ \right \}\text{.}
+\end{equation*}
+
+Ist alg ein strikt \( c \)-kompetitiver Online-Algorithmus und
+\begin{equation*}
+  C = \left \{ c : \text{\textsc{alg} ist strikt \( c \)-kompetitiv} \right \}\text{,}
+\end{equation*}
+so ist
+\begin{equation*}
+  c_\textsc{alg} = \inf C \quad \text{und} \quad c_\textsc{alg} \in C\text{.}
+\end{equation*}
+
+Im Folgenden geben wir eine kurze Übersicht über die Beispiele, die wir im Folgenden behandeln werden.
+
+\subsection{Job-Scheduling}
+
+Dieses Beispiel ist dem Beispiel im Kapitel ``Approximationsalgorithmen'' sehr ähnlich. Wir haben
+\begin{itemize}
+  \item \textbf{Maschinen} \( M_1,\dots,M_m \)
+  \item \textbf{Anfrage}: Job \( J_i \), benötigt Zeit \( t_i \geq 0 \)
+  \item \textbf{Antwort}: Zuordnung von \( J_i \) zu \( M_j \)
+\end{itemize}
+
+Wieder stellt sich die Frage, wie sich der Makespan (also das Intervall zwischen Start und Fertigstellen der letzten Maschine) minimieren lässt. Diese Entscheidung muss hier für jedes \( J_i \) ohne Kenntnis über die zukünftigen Jobs passieren.
+
+\subsection{Skiausleihe}
+
+Die Situation ist hier folgende: Man befinde sich im Skiurlaub und solange das Wetter gut ist, lautet jeden Morgen die \textbf{Anforderung} ``Ski ausleihen!''. Sobald das Wetter allerdings schlecht ist, lautet die \textbf{Anforderung} ``Heimfahren!''.
+
+Es sind zwei \textbf{Antworten} möglich:
+\begin{itemize}
+  \item Ski für einen Tag ausleihen: Kosten \( k \) Euro
+  \item Ski kaufen: Kosten \( K \) Euro (\( K \gg k \))
+\end{itemize}
+
+Was muss nun getan werden, um die Gesamtkosten klein zu halten? Diese Entscheidung muss ohne Kenntnis des zukünftigen Wetters gemacht werden!
+
+\subsection{Speicherverwaltung}
+
+``Kosten minimieren'' bedeutet im Speicherverwaltungskontext meist, die Anzahl an Cache Misses zu minimieren. Welche Verdränungsstrategie minimiert die Kosten hier am besten? Und wie kann man am besten zu verdrändende Seiten auswählen, ohne Kenntnis über zukünftige Anforderungen zu haben?
+
+\subsection{Auswahl von Experten}
+
+Hier gibt es mehrere Runden, jede läuft wie folgt ab:
+\begin{enumerate}
+  \item Jeder von \( n \) Experten gibt zu einer Frage eine Ja/Nein-Empfehlung ab. Diese sind im Allgemeinen nicht richtig.
+  \item Man trifft seine eigene Ja/Nein-Entscheidung zu derselben Fragestellung.
+  \item Es wird mitgeteilt, welche Entscheidung richtig gewesen wäre.
+\end{enumerate}
+
+Wie lässt sich hier die Anzahl an Fehlentscheidungen minimieren?
+
+\subsection{Selbstorganisierende Datenstrukturen}
+
+Hier haben wir eine einfach verkettete Liste und erhalten als \textbf{Anforderung} das Element \( x \) in der Liste. Die dabei entstehenden Kosten sind \( x \). Als \textbf{Reaktion} kann entweder
+\begin{itemize}
+  \item ohne weitere Kosten das angefragte Element weitrer nach vorne gerückt werden, oder
+  \item mit Kosten von \( 1 \) zwei aufeinanderfolgende Elemente vertauscht werden.
+\end{itemize}
+
+Welche Listen-Verwaltung minimiert hier die Kosten? Wie kann ohne Kenntnis über zukünftige Anforderungen sinnvoll umgeordnet werden?
