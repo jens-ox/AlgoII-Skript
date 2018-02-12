@@ -121,3 +121,32 @@ Hier haben wir eine einfach verkettete Liste und erhalten als \textbf{Anforderun
 \end{itemize}
 
 Welche Listen-Verwaltung minimiert hier die Kosten? Wie kann ohne Kenntnis über zukünftige Anforderungen sinnvoll umgeordnet werden?
+
+\section{Job-Scheduling}
+
+Wir nehmen den listScheduling-Approximationsalgorithmus und bauen ihn in einen Online-Algorithmus um:
+
+\begin{pseudocode}
+  \textbf{\textsc{listScheduling}}\( (n,m,t_{1\dots n}) \) \\
+  \textbf{each} \( L_i \coloneqq 0 \) \quad \textcolor{gray}{// load of machine \( 1 \leq i \leq m \)} \\
+  \textbf{each} \( S_j \coloneqq 0 \) \quad \textcolor{gray}{// machine for job \( 1 \leq j \leq n \)} \\
+  \textbf{for each} \( j \) \textbf{in} range\( (1,n) \) \textbf{do} \\
+  \phantom{\enskip} pick \( k \) from \( \left \{ i : L_i \text{ is currently minimal} \right \} \) \\
+  \phantom{\enskip} \( S_j \coloneqq k \) \\
+  \phantom{\enskip} \( L_k \coloneqq L_k + t_j \) \\
+  \textbf{return} \( S \)
+\end{pseudocode}
+
+Frühere Analysen ergeben, dass der Wettbewerbsfaktor höchstens \( 2 \) ist. Der Online-Algorithmus sieht nun so aus:
+
+\begin{pseudocode}
+  \textbf{\textsc{listScheduling}}\( (\phantom{n,}m\phantom{,t_{1\dots n}}) \) \\
+  \textbf{each} \( L_i \coloneqq 0 \) \quad \textcolor{gray}{// load of machine \( 1 \leq i \leq m \)} \\
+  \phantom{\textbf{each} \( S_j \coloneqq 0 \) \quad \textcolor{gray}{// machine for job \( 1 \leq j \leq n \)}} \\
+  \textbf{for each} \( t_j \) \textbf{in} \( \sigma \) \textbf{do} \\
+  \phantom{\enskip} pick \( k \) from \( \left \{ i : L_i \text{ is currently minimal} \right \} \) \\
+  \phantom{\enskip} \( a_j \coloneqq k \) \\
+  \phantom{\enskip} \( L_k \coloneqq L_k + t_j \) \\
+  \phantom{\enskip} assign job to machine \( a_j \)
+\end{pseudocode}
+
