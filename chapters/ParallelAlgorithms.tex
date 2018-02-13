@@ -133,7 +133,7 @@ Im Allgemeinen ist \( T_\text{seq}(I) < T_\text{par}(I,1) \). Man erhält aber l
   \begin{equation*}
     S(I,p) = \frac{T_\text{seq}(I)}{T_\text{par}(I,p)}\text{.}
   \end{equation*}
-  Vergröbert:
+  Vergröbert für alle Probleminstanzen der Größe \( n \):
   \begin{equation*}
     S(n,p) = \inf\left \{ S(I,p) : n = \left\vert I \right\vert \right \}\text{.}
   \end{equation*}
@@ -144,3 +144,54 @@ Zur Berechnung des Speedups können wir praktischerweise folgende Spezialfälle 
   \item \( T_\text{par}(I,p) = T_\text{par}(I',p) = T_\text{par}(n,p) \),
   \item \( T_\text{seq}(I) = T_\text{seq}(I') = T_\text{seq}(n) \)
 \end{itemize}
+
+Simuliert man \( p \) Prozessoren durch einen Prozessor, so sehen wir, dass ein sequenzieller Algorithmus nie langsamer als \( O(p*T_\text{par}(I,p)) \) sein kann, weswegen immer \( \frac{T_\text{seq}(I)}{T_\text{par}(I,p)} \in O(p) \) ist und \( S(n,p) \in O(p) \) ebenfalls.
+
+\begin{definition}[Effizienz]
+  Wir definieren die \term{Effizienz}\index{Effizienz} eines parallelen Algorithmus als
+  \begin{equation*}
+    E(n,p) \coloneqq \frac{S(n,p)}{p}\text{.}
+  \end{equation*}
+  Es ist \( S(n,p) \in O(p) \) und daher \( E(n,p) \in O(1) \). Tatsächlich ist sogar \( E(n,p) > 1 \) möglich (sogenannter \emph{superlinearer Speedup}).
+\end{definition}
+
+Es ist
+\begin{equation*}
+  E(n,p) \in \frac{T_\text{par}(n,p)}{p*T_\text{seq}(n)}\text{.}
+\end{equation*}
+
+\begin{definition}[Arbeit]
+  Wir definieren \term{Arbeit}\index{Arbeit} als
+  \begin{equation*}
+    W(n,p) \coloneqq p*T_\text{par}(n,p) \text{.}
+  \end{equation*}
+\end{definition}
+
+Mit obiger Definition gilt
+\begin{equation*}
+  E(n,p) = \frac{S(n,p)}{p} = \frac{T_\text{seq}(n)}{T_\text{par}(n,p)*p} = \frac{T_\text{seq}(n)}{W(n,p)}\text{.}
+\end{equation*}
+
+Wir können nun die parallele Reduktion mit \( p < n \) von vorhin genauer analysieren:
+\begin{itemize}
+  \item Es werden zuerst \( \tfrac{n}{p} \) Elemente sequenziell und anschließend \( p \) partielle Summen reduziert.
+  \item \textbf{Laufzeit}: \( T_\text{par}(n,p) = O(n/p) + O(\log p) \)
+  \item \textbf{Beschleunigung}: \( S(n,p) = \frac{O(n)}{O(n/p + \log p)} \)
+  \item \textbf{Effizienz}: \( E(n,p) = \frac{O(n)}{O(n+p\log p)} \)
+\end{itemize}
+
+Wir betrachten noch die zwei Sonderfälle:
+\begin{itemize}
+  \item \( p = n \):
+  \begin{itemize}
+    \item \( S(n,n) \in O\left( \frac{n}{\log n} \right) \)
+    \item \( E(n,n) \in O\left( \frac{1}{\log n} \right) \)
+  \end{itemize}
+  \item \( p \in O\left( \frac{n}{\log n} \right) \):
+  \begin{itemize}
+    \item \( S(n,p) = O(p) \)
+    \item \( E(n,p) = O(1) \)
+  \end{itemize}
+\end{itemize}
+
+Wir erkennen hier die größere Effizienz für kleinere \( p \) (nach Brents Prinzip).
