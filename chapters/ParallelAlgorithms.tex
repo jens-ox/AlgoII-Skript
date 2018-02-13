@@ -195,3 +195,64 @@ Wir betrachten noch die zwei Sonderfälle:
 \end{itemize}
 
 Wir erkennen hier die größere Effizienz für kleinere \( p \) (nach Brents Prinzip).
+
+\subsection{Parallele Präfixsummen}
+
+Wir verwenden \( \otimes \) wie oben definiert. Wir definieren nun
+\begin{align*}
+  &P_\otimes(x) = y = (y_0,\dots,y_{p-1}) \\
+  \text{mit } &y_i = \bigotimes_{k \leq i}x_k\text{.} %\text{ oder } y_i = \bigotimes_{k < i}x_k \text{ falls neutrales Element \( e \).}
+\end{align*}
+Es ist also \( y_0 = x_0 \) und \( y_{i+1} = y_i \otimes x_{i+1} \).
+
+\subsection{Präfixsummen --- Hyperwürfel-Algorithmus}
+
+Wir machen es uns hier einfach und legen fest, dass \( p = n = 2^d \) (für \( d \in \N \)) und \( \otimes \) kommutativ.
+
+Jede PE erhält nun eine ``Koordinate'' \( 0 \leq i \leq 2^d-1 \). Diese wird als Bitvektor
+\begin{equation*}
+  i = (i_{d-1}\cdots i_0) \quad \text{mit} \quad i_j \in \left \{ 0,1 \right \}
+\end{equation*}
+repräsentiert. Hier ist \( i_k \) das \( k \)-te Bit von rechts in \( i \).
+
+Wir erlauben Kommunikation zwischen zwei PE \( i \) und \( i' \) nur, wenn die Hammingdistanz ihrer Bitvektoren \( 1 \) ist, sie sich also nur in einer Stelle unterscheiden. Wir erhalten so einen \emph{Hyperwürfel} aus PEs.
+
+Wir berechnen nun Präfixsummen auf einem solchen Hyperwürfel:
+
+\begin{pseudocode}
+  \textbf{\textsc{prefixSum}}\( (x,\otimes) \) \\
+  \( y \coloneqq x \) \enskip \textcolor{gray}{// auf PE \( i \) liegt \( x_i \)} \\
+  \( s \coloneqq x \) \enskip \textcolor{gray}{// für Summe von Elementen in Unterwürfel} \\
+  \textbf{for} \( k \coloneqq 0 \) \textbf{to} \( d - 1 \) \textbf{do} \\
+  \phantom{\enskip} \( s' \coloneqq \textsc{sendRecv}(s,i \oplus 2^k, i \oplus 2^k) \) \\
+  \phantom{\enskip} \( s \coloneqq s \otimes s' \) \\
+  \phantom{\enskip} \textbf{if} \( i_k \equiv 1 \) \textbf{then} \( y \coloneqq y \otimes s' \) \\
+  \textcolor{gray}{// auf PE \( i \) liegt \( y_i = x_0 \otimes \cdots \otimes x_i \)}
+\end{pseudocode}
+
+Wir erhalten eine Laufzeit
+\begin{equation*}
+  T_\text{prefix} \in O((T_\text{start} + l * T_\text{byte}) * \log p)\text{.}
+\end{equation*}
+
+Diese Laufzeit ist nicht optimal. Wie man sie optimieren kann wird in der Vorlesung ``Parallele Algorithmen'' näher erläutert.
+
+\subsection{Paralleles Sortieren}
+
+Hier gibt es zwei verschiedene Aufgabenvarianten:
+
+\begin{enumerate}
+  \item Alle \( n \) Elemente liegen zu Beginn auf PE 0. Deswegen muss jedes Element von PE 0 mindestens einmal angefasst werden. Die Laufzeit ist daher in \( \Omega(n) \).
+  \item Je \( n/p \) Elemente liegen zu Beginn auf PE \( i \). Dieser Fall ist wesentlich interessanter.
+\end{enumerate}
+
+Zunächst betrachten wir den einfachen Fall \( p = n \) (Prozessor \( i \) hat Eingabeelement \( x_i \)). Wir behalten die Grundidee von Quicksort bei:
+\begin{itemize}
+  \item Wir wählen ein Element pv als Pivot.
+  \item Elemente werden umverteilt:
+  \begin{itemize}
+    \item kleiner als pv: auf Prozessoren mit kleineren Rängen
+    \item größer als pv: auf Prozessoren mit großen Rängen
+  \end{itemize}
+  \item Parallele Rekursion.
+\end{itemize}
