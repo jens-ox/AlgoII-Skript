@@ -256,3 +256,30 @@ Zunächst betrachten wir den einfachen Fall \( p = n \) (Prozessor \( i \) hat E
   \end{itemize}
   \item Parallele Rekursion.
 \end{itemize}
+
+Wir schauen uns den \term{Theoretiker-Quicksort}\index{Theoretiker-Quicksort} an:
+
+\begin{pseudocode}
+  \textcolor{gray}{// Teil 0: Vorbereitungen} \\
+  \textbf{\textsc{theoQSort0}}\( (x) \) \\
+  \( i \coloneqq \text{commRank}() \) \\
+  \( p \coloneqq \text{commSize}() \) \enskip \textcolor{gray}{// hier hat PE \( i \) Element \( x_i \)} \\
+  \( \text{theoQSort}(x,0,p-1) \) \\
+  \ \\
+  \textcolor{gray}{// Teil 1: kleine Elemente zählen} \\
+  \textbf{\textsc{theoQSort}}\( (x,\dots) \) \\
+  \textbf{if} \( i \equiv 0 \) \textbf{then} \( \text{ipv} \coloneqq \text{randInt}(0,p) \) \\
+  \( \text{ipv} \coloneqq \text{bcast}(\text{ipv}, 0) \) \\
+  \( \text{pv} \coloneqq \text{bcast}(x, \text{ipv}) \) \\
+  \( \text{small} \coloneqq (x \leq \text{pv}) \) \\
+  \( j \coloneqq \text{prefixSum}(\text{small},+) \) \\
+  \( p' \coloneqq \text{bcast}(j,p-1) \) \\
+  \ \\
+  \textcolor{gray}{// Teil 2: Datenumverteilung und Rekursion} \\
+  \textbf{if} \( \text{small} \equiv 1 \) \textbf{then} \( \text{send}(x,j-1) \) \\
+  \textbf{else} \( \text{send}(x,p'+i-j) \) \\
+  \( x \coloneqq \text{recv}(\text{any}) \) \\
+  recursive theoQSort of ``left''/``right'' part
+\end{pseudocode}
+
+Die erwartete Rekursionstiefe ist in \( O(\log p) \), die Zeit jeweils in \( O(T_\text{start}\log p) \). Insgesamt ist die erwartete Zeit also in \( O(T_\text{start}(\log p)^2) \).
