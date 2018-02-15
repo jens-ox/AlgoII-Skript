@@ -1,0 +1,158 @@
+\chapter{Randomisierte Algorithmen}
+
+\newcommand{\E}{\text{\textbf{E}}}
+
+\paragraph{Neue Grundlagen}
+\begin{itemize}
+  \item \textbf{Zufallszahlen}: $ \text{\code{randInt}}(c : \N) $ liefere zufälliges $ n \in \{ 0, 1, \dots, c-1 \} $
+  \item \textbf{Nichtdeterminismus}: Mehrere Ausführungen des \emph{gleichen} randomisierten Algorithmus für \emph{gleiche} Eingabe evtl. verschieden!
+  \item \textbf{Zufallsvariablen}: Für feste Eingabe sind Laufzeit, Speicherplatzbedarf, Ergebnis Zufallsvariablen
+\end{itemize}
+
+\paragraph{Recap Wahrscheinlichkeitstheorie}
+\begin{itemize}
+  \item \textbf{Elementareregnisse}: Menge $ \Omega $
+  \item \textbf{$ \sigma $-Algebra}: Menge von Ereignissen $ E \subseteq 2^\Omega $ (Potenzmenge von $ \Omega $)
+  \begin{itemize}
+    \item \emph{diskret}, wenn $ E = 2^\Omega $ und $ \vert \Omega \vert \leq \vert \N \vert $
+  \end{itemize}
+  \item \textbf{Wahrscheinlichkeitsmaß}: $ \Pr: E \to [0,1]$ ($ \sigma $-additiv, $ \Pr(\Omega) = 1 $)
+  \item \textbf{Zufallsvariable}: $ X : \Omega \to \R $ mit Eigenschaften \dots
+  \begin{itemize}
+    \item Eigenschaften erfüllt, falls $ \sigma $-Algebra diskret (hier immer der Fall)
+  \end{itemize}
+  \item \textbf{Schreibweisen}:
+  \begin{itemize}
+    \item $ \Pr(X \leq x) $ statt $ \Pr(\{ \omega \mid X(\omega) \leq x \}) $
+    \item $ \Pr(X = x) $ statt $ \Pr(\{ \omega \mid X(\omega) = x \}) $
+  \end{itemize}
+  \item \textbf{Beispiel}: Würfeln
+  \begin{itemize}
+    \item $ \Omega = \{ 1, 2, 3, 4, 5, 6 \} $
+    \item $ E = 2^\Omega $ disket, z.B. $ E \ni g = \{ 2, 4, 6 \} $ (gerade Zahl gewürfelt)
+    \item fairer Würfel: $ \forall w \in \Omega : \Pr(\omega) = \frac{1}{6} $
+    \item Beispiel: $ X(\omega) = \begin{cases}
+      0\text{,} \quad &\text{falls $ \omega $ Produkt zweier Primfaktoren} \\
+      1\text{,} \quad &\text{sonst}
+    \end{cases} $
+    \item z.B. $ \Pr(X = 1) = \Pr(\{ 1, 2, 3, 5 \}) = \frac{2}{3} $
+  \end{itemize}
+  \item \textbf{Erwartungswert} von X: $ \E(X) = \sum_{x \in \R}x\Pr(X = x) $
+  \begin{itemize}
+    \item $ \E(X + Y) = \E(X) + \E(Y) $
+    \item \emph{unabhängig}, falls $ \forall x, y \in \R : \Pr(X = y \wedge Y = y) = \Pr(X = x) * \Pr(Y = y) $
+    \item falls $ X, Y $ unabhängig: $ \E(X * Y) = E(X) * E(Y) $
+  \end{itemize}
+  \item \textbf{Indikator-Zufallsvariable}: $ 0 $ und $ 1 $ einzig mögliche Funktionswerte
+\end{itemize}
+
+\paragraph{Ausführung randomisierter Algorithmen}
+\begin{itemize}
+  \item randomisierter Algorithmus $ R $, Eingabe $ x $
+  \item $ \Omega = \{ \text{``Programmlauf'' von } R \text{ für Eingabe } x \} $
+  \begin{itemize}
+    \item \emph{Programmlauf}: Folge der durchlaufenen globalen Speicherzustände
+  \end{itemize}
+  \item $ E = 2^\Omega $
+  \item Mögliche Zufallsvariablen:
+  \begin{itemize}
+    \item $ X(\text{Prog.lauf}) = $ Anzahl Schritte
+    \item $ X(\text{Prog.lauf}) = $ Ausgabe
+  \end{itemize}
+  \item \textbf{Unbekannte Laufzeit}: Gewollt? Mögliche Quantifizierung?
+  \item \textbf{Variierende Ausgaben}: Oft gewollt (Erzeugung zufälliger Objekte, Optimierung)
+  \item \textbf{Fehlerhafte Ausgaben}: Fehlerwahrscheinlichkeit?
+  \item[$ \to $] \emph{Quantifizierung}
+  \item \textbf{Vorteile}: manchmal
+  \begin{itemize}
+    \item leichter zu formulieren/implementieren
+    \item ``schneller'', ``besser''
+    \item einzige Möglichkeit
+  \end{itemize}
+\end{itemize}
+
+\paragraph{Markov-/Chebyshev-Ungleichung}
+\begin{itemize}
+  \item \textbf{Markov}: ZV $ Y \geq 0 $, Erwartungswert $ \mu_Y $. Dann gilt $ \forall t,k \in \R_+ $:
+  \begin{equation*}
+    \Pr(Y \geq t) \leq \tfrac{\mu_Y}{t} \text{ bzw } \Pr(Y \geq k\mu_Y) \leq \tfrac{1}{k}
+  \end{equation*}
+  \item \textbf{Chebyshev}: ZV $ X $ mit EW $ \mu_X $, Standardabweichung $ \sigma_X $. Dann gilt $ \forall t \in \R_+ $:
+  \begin{equation*}
+    \Pr(\vert X - \mu_X \vert \geq t\sigma_X) \leq \tfrac{1}{t^2} \text{ bzw } \Pr(\vert X - \mu_X \vert \geq t) \leq \tfrac{\sigma^2_X}{t^2}
+  \end{equation*}
+\end{itemize}
+
+\paragraph{Chernoff-Schranken}
+\begin{itemize}
+  \item $ X_1, \dots, X_n $ unabhängige Indikator-ZV mit $ \Pr(X_i = 1) = p_i $
+  \item $ X = \sum_{i=1}^nX_i $ und $ \mu = \E(X) = \sum p_i $
+  \item Dann gilt für alle $ 0 \leq \delta $:
+  \begin{equation*}
+    \Pr(X \geq (1+\delta)\mu) \leq \left( \tfrac{e^\delta}{(1+\delta)^{1+\delta}} \right)^\mu
+  \end{equation*}
+  \item Dann gilt für alle $ 1 > \delta \geq 0 $, also $ 0 < 1-\delta \leq 1 $:
+  \begin{equation*}
+    \Pr(X \leq (1-\delta)\mu) \leq \left( \tfrac{e^{-\delta}}{(1-\delta)^{1-\delta}} \right)^\mu
+  \end{equation*}
+  \item \textbf{Vereinfachung}: Betrachte $ f(\delta) = \delta - (1 \pm \delta)\ln(1\pm\delta) $ statt $ \left( \frac{e^\delta}{(1\pm\delta)^{1\pm\delta}} \right)^\mu $
+  \begin{itemize}
+    \item je nach Bereich, aus dem $ \delta $ stammt, kann man $ f(\delta) $ nach oben durch $ -\frac{\delta^2}{c} $ abschätzen
+  \end{itemize}
+  \item \textbf{Korollar}: Für $ 1 > \delta \geq 0 $ gilt:
+  \begin{equation*}
+    \Pr(X \leq (1-\delta)\mu) \leq \left( \tfrac{e^{-\delta}}{(1-\delta)^{1-\delta}} \right)^\mu \leq e^{-\delta^2\tfrac{\mu}{2}}
+  \end{equation*}
+\end{itemize}
+
+\paragraph{Und-Oder-Bäume}
+\begin{itemize}
+  \item \textbf{Aufbau}: $ T_k $ vollständiger binärer Baum, Höhe $ 2k $
+  \begin{itemize}
+    \item \emph{innere Knoten}: abwechselnd mit $ \wedge $ und $ \vee $ markiert
+    \item \emph{Wurzel} von $ T_1 $: $ \wedge $-Knoten mit zwei nachfolgenden $ \vee $-Knoten
+    \item $ T_{k-1} \to T_k $: Blätter werden durch Kopien von $ T_{k-1} $ ersetzt
+    \item \emph{Knoten}: $ T_K $ hat $ n = 4^k $ Blätter (im Folgenden $ x_1, \dots, x_{4^k} $)
+  \end{itemize}
+  \item \textbf{Auswertung}:
+  \begin{itemize}
+    \item \emph{gegeben}: Werte $ x_1, \dots, x_n $ an den Blättern
+    \item \emph{gesucht}: Wert $ T_k(x_1, \dots, x_n) $ an der Wurzel
+    \item Berechnung: bottom-up durch Besuch aller Blätter + Berechnung der inneren Knoten
+    \item \emph{Frage}: geht es besser?
+  \end{itemize}
+  \item \textbf{Problem}: für jeden \emph{deterministischen} Algorithmus $ A $ und jedes $ k \geq 1 $ gibt es eine Bitfolge $ x_1, \dots, x_n $, sodass $ A $ zur Berechnung von $ T_k $ alle $ 4^k $ Blätter besucht
+  \item \textbf{Aber}: jede Liste $ x_1, \dots, x_{4^k} $ enthält Teilfolge $ x_1, \dots, y_{2^k} $, die schon Wurzelwert festlegt!
+  \begin{itemize}
+    \item diese $ y_i $ sind schwer zu finden $ \leadsto $ \textbf{Randomisierung}?
+  \end{itemize}
+  \item \textbf{Satz}: Für jede randomisierte UOB-Auswertung gilt: Für \emph{jede} Folge $ x_1, \dots, x_{4^k} $ ist Erwartungswert für die Anzahl besuchter Blätter $ \leq 3^k = n^{\log_4 3} \approx n^{0.792\dots} $. Das ist beweisbar optimal.
+\end{itemize}
+
+\paragraph{Erd\H{o}s-Rényi-Zufallsgraphen}
+\begin{itemize}
+  \item \textbf{Initialisierung}: $ G = (\{ 1, \dots, n \}, \varnothing) $
+  \item \textbf{Aufbauen}:
+    \begin{lstlisting}[escapeinside={(*}{*)}]
+for (*$ i \leftarrow 1 $*) to (*$ n - 1 $*) do
+  for (*$ j \leftarrow i + 1 $*) to (*$ n $*) do
+    add (*$ \{ i,j \} $*) to (*$ E $*) with probability (*$ p = p(n) $*)
+return (*$ (V, E) $*)
+  \end{lstlisting}
+  \item \textbf{Eigenschaften}:
+  \begin{itemize}
+    \item Wahrscheinlichkeit für bestimmten Graphen mit $ n $ Knoten und $ m $ Kanten:
+    \begin{equation*}
+      p^m(1-p)^{\left( \begin{smallmatrix}
+        n \\ 2
+      \end{smallmatrix} \right)-m}
+    \end{equation*}
+    \item Erwartete Kantenzahl: $ p\left( \begin{smallmatrix}
+      n \\ 2
+    \end{smallmatrix} \right) $
+    \item erwarteter Knotengrad: $ p(n-1) $
+    \item Wahrscheinlichkeit für Knotengrad $ d $: $ \left( \begin{smallmatrix}
+      n-1 \\ d
+    \end{smallmatrix} \right)p^d(1-p)^{n-1-d} $
+  \end{itemize}
+\end{itemize}

@@ -1,0 +1,56 @@
+\chapter{Fortgeschrittene Datenstrukturen}
+
+Wir werden uns in diesem Kapitel mit Prioritätslisten beschäftigen. Es gibt noch viele weitere fortgeschrittene Datenstrukturen, z.B.
+\begin{itemize}
+  \item monotone ganzzahlige Prioritätslisten (später im Kapitel ``kürzeste Wege'')
+  \item perfektes Hashing
+  \item Suchbäume mit fortgeschrittenen Operationen
+  \item externe Prioritätslisten (später im Kapitel ``Externe Algorithmen'')
+  \item Geometrische Datenstrukturen (siehe Kapitel ``Geometrische Algorithmen'')
+\end{itemize}
+
+\section{Adressierbare Prioritätslisten}
+
+Eine adressierbare Prioritätsliste muss folgene Funktionen implementieren:
+
+\begin{pseudocode}
+  \begin{tabular}{ll}
+    \textbf{\textsc{build}}\( (\left \{ e_1,\dots,e_n \right \}) \) & \( M \coloneqq \left \{ e_1,\dots,e_n \right \} \) \\
+    \textbf{\textsc{size}} & \textbf{return} \( \left\vert M \right\vert \) \\
+    \textbf{\textsc{insert}}\( (e) \) & \( M \coloneqq M \cup \left \{ e \right \} \) \\
+    \textbf{\textsc{min}} & \textbf{return} \( \min M \) \\
+    \textbf{\textsc{deleteMin}} & \( e \coloneqq \min \); \enskip \( M \coloneqq M \setminus \left \{ e \right \} \); \enskip \textbf{return} \( e \) \\
+    \textbf{\textsc{remove}}\( (h : \text{Handle}) \) & \( e \coloneqq h \); \enskip \( M \coloneqq M \setminus \left \{ e \right \} \); \enskip \textbf{return} \( e \) \\
+    \textbf{\textsc{decreaseKey}}\( (h : \text{Handle}, k : \text{Key}) \) & \( \text{key}(h) \coloneqq k \) \\
+    \textbf{\textsc{merge}}\( (M') \) & \( M \coloneqq M \cup M' \)
+  \end{tabular}
+\end{pseudocode}
+
+Adressierbare Prioritätslisten haben viele Anwendungen, beispielsweise im Dijkstra-Algorithmus für kürzeste Wege oder in der Graphpartitionierung. Allgemein lassen sich adressierbare Prioritätslisten gut bei Greedy-Algorithmen verwenden, bei denen sich die Prioritäten (begrenzt) ändern.
+
+\subsection{Dijkstras Algorithmus}
+
+Berechne die Distanz zwischen einem Startknoten \( s \) und jedem anderen Knoten des Graphen.
+
+\begin{pseudocode}
+  \textbf{\textsc{Dijkstra}}\( (s : \text{Node}, T : \text{Tree}) \) \\
+  \textcolor{gray}{// Initialisieren: Distanz zu jedem Knoten ist \( \infty \), zu Startknoten \( 0 \).} \\
+  \( d = \left\langle \infty,\ldots,\infty \right\rangle \) \\
+  \( d[s] = 0 \) \\
+  \textcolor{gray}{// Startknoten zu PQ hinzufügen.} \\
+  \( Q\text{.insert}(s) \)
+\end{pseudocode}
+
+\begin{itemize}
+  \item \( d = \left\langle \infty,\cdots,\infty \right\rangle \)
+  
+  Zu Beginn ist die Distanz zu jedem Knoten \( \infty \).
+
+  \item \( \text{parent}[s] = s \), \( d(s) = 0 \)
+  
+  Der Startknoten wird initialisiert.
+
+  \item \( Q\text{.insert}(s) \) 
+
+  Prioritätsliste wird mit Startknoten initialisiert.
+\end{itemize}

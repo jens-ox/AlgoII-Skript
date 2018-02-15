@@ -1,0 +1,257 @@
+\chapter{Approximationsalgorithmen}
+
+\paragraph{Suchprobleme}
+\begin{itemize}
+  \item Für Probleminstanz $ I \in M_I $ gibt es Menge $ M_S(I) $ möglicher Lösungen $ S \in M_S(I) $
+  \item \textbf{Zielfunktion} $ f: \bigcup_{I \in M_I} M_S(I) \to \R_+ $
+  \item \textbf{Minimierungsproblem}: $ \forall I \in M_I \ \exists \ f^*(I) \coloneqq \min\{ f(S) : S \in M_S(I) \} $
+  \begin{itemize}
+    \item gegeben: $ I $
+    \item gesucht: $ S $ mit $ f(S) = f^*(I) $
+  \end{itemize}
+  \item \textbf{Maximierungsproblem}: analog
+\end{itemize}
+
+\paragraph{Suchprobleme --- Approximation}
+\begin{itemize}
+  \item Lösungen $ S $ mit $ f(S) = f^*(I) $ oft schwer zu finden (z.B. \textbf{NP}-schwer)
+  \item \textbf{Auswege}:
+  \begin{itemize}
+    \item \emph{naiv}: alle möglichen Lösungen betrachten $ \leadsto $ oft zu aufwändig
+    \item \emph{ad-hoc-Heuristiken}: Qualität der Antwort eventuell unklar
+    \item \emph{Approximationsalgorithmus} $ A $:
+    \begin{itemize}
+      \item $ f(A(I)) $ ``möglichst nah an'' $ f^*(I) $
+      \item \textbf{Optimierungsaufgabe}
+      \item möglichst polynomielle Laufzeit
+      \item Garantie für Lösungsgüte
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+\paragraph{Job Scheduling}
+\begin{itemize}
+  \item \textbf{Problem}: $ m $ Maschinen sollen $ n $ Jobs abarbeiten, möglichst alle gleichzeitig fertig
+  \begin{itemize}
+    \item \emph{Maschinen} $ M_1, \dots, M_m $
+    \item \emph{Jobs} $ J_1, \dots, J_n $
+    \item \emph{Lösung} $ S: \{ 1,\dots,n \} \to \{ 1,\dots,m \} $
+    \item \emph{Last} von Maschine $ i $: $ L_i = \sum_{S(j) = i}t_j $
+    \item \emph{Zielfunktion}: minimiere Makespan $ L_\text{max} = \text{max}_iL_i $ (Wann ist letzte Maschine fertig?)
+    \item \emph{einfacher Fall}: identische Maschinen, unabhängige Jobs
+    \item Problem ist \textbf{NP}-hart
+  \end{itemize}
+  \item \textbf{Approximationsfaktor}: Approximationsalgorithmus $ A $ für Minimierungsproblem mit Zielfunktion $ f $ erzielt \emph{Approximationsfaktor} $ \rho $, falls
+  \begin{equation*}
+    \forall I \in M_I : \tfrac{f(A(I))}{f^*(I)} \leq \rho
+  \end{equation*}
+  \begin{itemize}
+    \item \emph{einfacher Fall}: $ \rho = 1 \leadsto A $ liefert stets optimale Lösung
+  \end{itemize}
+\end{itemize}
+
+\paragraph{Turing-Reduzierbarkeit}
+\begin{itemize}
+  \item \textbf{Definition}: Suchproblem $ \Pi $ \emph{\textbf{NP}-schwer} oder \emph{\textbf{NP}-hart}, falls ein \textbf{NP}-vollständiges Entscheidungsproblem $ L $ existiert mit $ L \leq_T^p \Pi $, d.h.
+  \begin{itemize}
+    \item \emph{Orakel-Turingmaschine} für $ L $ mit Orakel für $ \Pi $ (eine Befragung = 1 Schritt) in polynomieller Laufzeit
+    \item[$ \leadsto $] Turing-Reduktion in Polynomialzeit
+    \item[$ \leadsto $] Wenn $ \Pi $ polynomiell lösbar ist, dann auch $ L $
+  \end{itemize}
+\end{itemize}
+
+\paragraph{Allgemeines Travelling Salesman-Problem}
+\begin{itemize}
+  \item \textbf{Probleminstanz}: Graph $ G = (V, E \coloneqq V \times V) $, Längenfunktion $ c: E \to \Z_+ $
+  \item \textbf{Zielfunktion} für Permutation $ \pi $ von $ V $:
+  \begin{align*}
+    f(\pi) &= \textstyle\sum_{i=1}^{ n-1 }c(\pi(i), \pi(i+1)) + c(\pi(n),\pi(1)) \\
+     &\leadsto f^*(G,c) = \text{min}_\pi f(\pi)
+  \end{align*}
+  \item \textbf{Gesucht}: Permutation $ \pi $ mit minimalem $ f(\pi) = f^*(G,c) $
+\end{itemize}
+
+\paragraph{Allgemeines TSP --- Approximation}
+\begin{itemize}
+  \item \textbf{Gegeben}:
+  \begin{itemize}
+    \item $ a \geq 1 $
+    \item \emph{Probleminstanz} (wie oben)
+    \item \emph{Zielfunktion} (wie oben)
+  \end{itemize}
+  \item \textbf{Gesucht}: Permutation $ \pi $ mit $ f(\pi) \leq a*f^*(G,c) $
+  \item \textbf{Satz}: Für jedes $ a \geq 1 $ ist TSP-$ a $-Approximations-Suchproblem \textbf{NP}-hart.
+\end{itemize}
+
+\paragraph{Entscheidungsproblem --- Hamiltonkreis}
+\begin{itemize}
+  \item \textbf{Probleminstanz}: Graph $ G = (V,E) $
+  \item \textbf{Frage}: Gibt es Hamilton-Kreis in $ G $?
+  \begin{itemize}
+    \item[$ \cong $] Permutation $ \pi $ derart, dass $ \pi(1), \dots,\pi(n),\pi(1) $ Kreis
+  \end{itemize}
+  \item Problem ist \textbf{NP}-vollständig
+\end{itemize}
+
+\paragraph{Metrisches TSP}
+\begin{itemize}
+  \item \textbf{Definition}: Wie TSP, aber \emph{Dreiecksungleichung} wird von $ c $ verlangt:
+  \begin{equation*}
+    \forall x, y, z \in V : c(x,y) + c(y,z) \geq c(x,z)
+  \end{equation*}
+  \item \textbf{Satz}: Für Instanzen des Problems kann man in Polynomialzeit eine $ 2 $-Approximation berechnen
+\end{itemize}
+
+\paragraph{Pseudopolynomielle Laufzeit}
+\begin{itemize}
+  \item \textbf{Laufzeitabhängigkeit}: Laufzeit $ t(I) $ für Eingabe $ I $ abhängig von \emph{Größe} $ n(I) $ der Repräsentation von $ I $
+  \item \textbf{Binäre Codierung}: Codierung von $ k \in \N $ braucht $ n(I) = \bm{n_2(I)} = \Theta(\log_2 k) $ Bits
+  \item \textbf{Unäre Codierung}: Codierung von $ k \in \N $ braucht $ n(I) = \bm{n_1(I)} = k $ Bits
+  \item \textbf{Polynomielle Laufzeit} $ t(n) $, wenn
+    \begin{equation*}
+      \exists \text{ Polynom } p(n) \forall I : t(I) \leq p(n_2(I))
+    \end{equation*}
+  \item \textbf{Pseudopolynomielle Laufzeit} $ t(n) $, wenn
+    \begin{equation*}
+      \exists \text{ Polynom } p(n) \forall I : t(I) \leq p(n_1(I))
+    \end{equation*}
+  \item \textbf{Achtung}!
+  \begin{itemize}
+    \item \emph{Pseudopolynomielle Laufzeit}: Tatsächliche Form der Eingabe? 
+    \item Nicht verwechseln mit \emph{quasipolynomieller Laufzeit} $ t(n) = 2^{O((\log n)^c)} $ (Konstante $ c > 0 $)
+  \end{itemize}
+\end{itemize}
+
+\paragraph{Knapsack}
+\begin{itemize}
+  \item \textbf{Probleminstanz}:
+  \begin{itemize}
+    \item \emph{Gegenst"ande} $ M = \{ 1,\dots,n \} $ 
+    \item \emph{Maximalgr"o"se} $ W \in \N $ (Rucksackgr"o"se)
+    \item \emph{Gr"o"sen} $ w_i \in \N $ (oBdA jedes $ w_i \leq W $)
+    \item \emph{Profite} $ p_i \in \N $
+    \item[$ \leadsto $] Gegenstand $ i $ hat Gr"o"se $ w_i $ und Profit $ p_i $
+  \end{itemize}
+  \item \textbf{L"osungen}: Teilmenge $ M' \subseteq M $ mit
+    \begin{equation*}
+      w(M') = \textstyle\sum_{i \in M'}w_i \leq W
+    \end{equation*}
+  \item \textbf{Gesucht}:
+  \begin{itemize}
+    \item \emph{Teilmengen} mit m"oglichst gro"sem Profit
+    \item \emph{Zielfunktion} $ f(M') = p(M') = \sum_{i \in M'}p_i $
+    \item \emph{Maximierungsproblem} $ f^*(I) $
+  \end{itemize}
+  \item \textbf{Codierung} ($ \hat{P} \coloneqq \sum_i p_i $)
+  \begin{center}
+    \begin{tabular}{ c c c } 
+      \hline    
+      Bestandteil & $ u_2(T) $ & $ u_1(T) $ \\
+      \hline
+      $ \{ 1,\dots,n \} $ & $ \log n $ & $ n $ \\
+      $ W $ & $ \log W $ & $ W $ \\
+      $ \langle w_1, \dots, w_n \rangle $ & $ n\log W $ & $ nW $ \\
+      $ \langle p_1, \dots, p_n \rangle $ & $ n\log \hat{P} $ & $ n \hat{P} $ \\
+      \hline
+      \textbf{insgesamt} & $ \Theta(n\log W + n\log \hat{P}) $ & $ \Theta(nW + n\hat{P}) $
+    \end{tabular}
+  \end{center}
+  \item \textbf{Schwere}: \textbf{NP}-schwer
+  \begin{itemize}
+    \item bei ``normaler'' Messung der Eingabegr"o"se
+    \item \emph{aber}: pseudopolynomielle Laufzeit erreichbar
+    \item[$ \leadsto $] \emph{schwach \textbf{NP}-schwer}
+  \end{itemize}
+  \item \textbf{Pseudopolynomielle Laufzeit} durch \emph{dynamische Programmierung}:
+  \begin{equation*}
+    C(i,P) \coloneqq \min\{ w(M') : M \subseteq \{ 1, \dots, i \} \wedge p(M') \geq P \}
+  \end{equation*}
+  falls ein solches $ M' $ existiert, $ \infty $ sonst.
+  \begin{align*}
+    C(1,P) &= \begin{cases}
+      w_1, &\text{falls } p_1 \geq P \\
+      \infty, &\text{sonst}
+    \end{cases} \\
+    C(i+1, P) &= \min\{ C(i,P), w_{i+1}+C(i,P-p_{i+1}) \}
+  \end{align*}
+  \begin{pseudocode}
+    \textsc{\textbf{dynProgKnapsack}}($ n $, $ W $, $ \langle w_1, \dots, w_n \rangle, \langle p_1, \dots, p_n \rangle $) \\
+    \textbf{for} $ P \leftarrow 1 $ \textbf{to} $ \hat{P} $ \textbf{do} \\
+    \phantom{\quad} $ C(1,P) \leftarrow \cdots $ \\
+    \textbf{for} $ i \leftarrow 1 $ \textbf{to} $ n - 1 $ \textbf{do} \\
+    \phantom{\quad} \textbf{for} $ P \leftarrow 1 $ \textbf{to} $ \hat{P} $ \textbf{do} \\
+    \phantom{\quad} \phantom{\quad} $ C(i+1, P) \leftarrow \min\{ C(i,P), w_{i+1}+C(i,P-p_{i+1}) \} $ \\
+    \textbf{return} $ \max\{ P : C(n,P) \leq W \} $
+  \end{pseudocode}
+  \begin{itemize}
+    \item \emph{Erweiterung}: in $ C(i,P) $ speichern, welche Objekte der $ 1,\dots,i $ benutzt werden
+    \item[$ \leadsto $] Skalarprodukt Objekt-Bitvektor und Profit ist maximaler Profit
+  \end{itemize}
+\end{itemize}
+
+\paragraph{(Voll) Polynomielle Approximationsschemata}
+\begin{itemize}
+  \item \textbf{Vorgaben}:
+  \begin{itemize}
+    \item $ \left\{ \begin{smallmatrix}
+      \text{\emph{Minimierungs}} \\
+      \text{\emph{Maximierungs}}
+    \end{smallmatrix} \right\} $-\emph{Problem} $ \Pi = \{ D, S, f \} $
+    \begin{itemize}
+      \item Eingabemenge $ D $
+      \item $ S \ni S_I $ Menge der für Eingabe $ I \in D $ gültigen Lösungen
+      \item Bewertungsfunktion $ f: S_I \to \N $
+    \end{itemize}
+    \item \emph{Algorithmus} $ \mathcal{A}(I,\epsilon) $ mit $ \epsilon \in \R_{+} $, $ I \in \Pi_D $
+  \end{itemize}
+  \item \textbf{PTAS} $ \mathcal{A} $ (\emph{pol. Approx.-Schema}), falls $ \forall \epsilon > 0 \ \exists \text{ Polynom } p(n) : \forall I \in \Pi_D: $
+  \begin{enumerate}
+    \item $ f(\mathcal{A}(I,\epsilon))\begin{smallmatrix}
+      \leq \\ \geq
+    \end{smallmatrix}\left( \begin{smallmatrix}
+      1+\epsilon \\
+      1-\epsilon
+    \end{smallmatrix} \right)f^*(I) $ 
+    \item Laufzeit $ t(I, \epsilon) \leq p(n_2(I)) $
+  \end{enumerate}
+  \item \textbf{FPTAS} $ \mathcal{A} $ (\emph{voll pol. Approx.-Schema}), falls $ \exists $ Polynom $ p(n,x) : \forall I \in \Pi_D, \epsilon > 0: $
+  \begin{enumerate}
+    \item $ f(\mathcal{A}(I,\epsilon))\begin{smallmatrix}
+      \leq \\ \geq
+    \end{smallmatrix}\left( \begin{smallmatrix}
+      1+\epsilon \\
+      1-\epsilon
+    \end{smallmatrix} \right)f^*(I) $
+    \item Laufzeit $ t(I,\epsilon) \leq p(n_2(I),\smallfrac{1}{\epsilon}) $
+  \end{enumerate}
+  \item Jedes FPTAS ist PTAS, aber nicht umgekehrt
+\end{itemize}
+
+\newpage
+
+\paragraph{Knapsack --- FPTAS}
+\begin{itemize}
+  \item \textbf{Implementierung}:
+  \begin{pseudocode}
+    \textsc{\textbf{epsApproxKnapsack}}($ \epsilon, n, W, w, p $) \\
+    $ P \leftarrow \max_ip_i $ \\
+    $ K \leftarrow \epsilon\tfrac{P}{n} $ \\
+    \textbf{each} $ p_i' \leftarrow \left\lfloor \tfrac{p_i}{K} \right\rfloor $ \\
+    $ x' \leftarrow $ \textsc{dynProgKnapsack}($ n, W, w, p' $) \\
+    \textbf{return} x'  
+  \end{pseudocode}
+  \item \textbf{Analyse}:
+  \begin{itemize}
+    \item $ x^* $ optimale Lösung für ursprüngliches $ p $, $ x' $ optimale Lösung für $ p' $
+    \item $ px^* = \sum_{i : x_i^* = 1}p_i = $ max. Profit des Originalproblems
+    \item \emph{Frage}: Wie gut ist $ px' $ im Vergleich zu $ px^* $?
+    \begin{itemize}
+      \item[$ \to $] $ px' \geq (1-\epsilon)px^* $ 
+    \end{itemize}
+  \end{itemize}
+  \item \textbf{Laufzeit}: $ O(n^3\tfrac{1}{\epsilon}) $
+  \begin{itemize}
+    \item dyn. Programmierung für $ p' $ Problem dominiert $ \to $ Laufzeit $ n\hat{P}' $
+    \item $ n\hat{P}' = n\sum{i : x_i' = 1}p_i' \leq n^2\max_ip_i' = n^2\left\lfloor \tfrac{\hat{P}}{K}\right\rfloor = n^2\left\lfloor \tfrac{\hat{P}n}{\epsilon \hat{P}} \right\rfloor \leq n^3\tfrac{1}{\epsilon} $
+  \end{itemize}
+\end{itemize}
