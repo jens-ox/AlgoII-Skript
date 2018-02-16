@@ -214,3 +214,64 @@ Wir berechnen die gewünschten Informationen nun so:
 \end{pseudocode}
 
 Die Gesamtlaufzeit beträgt also \( O(nm + n^2\log n) \).
+
+\section{Distanz zu Zielknoten}
+
+Wir haben bisher zwei Fälle diskutiert:
+\begin{enumerate}
+  \item Abstände aller Knoten zu einem Startknoten \( s \)
+  \item Abstände zwischen allen Knotenpaaren \( \left \{ u,v \right \} \in V^2 \)
+\end{enumerate}
+
+Als nächstes schauen wir uns an, wie man den kürzesten Pfad zwischen einem Startknoten \( s \) und einem Zielknoten \( t \) ermittelt.
+
+\subsection{Trick 0 --- Dijkstra abbrechen}
+
+Am einfachsten ist es, einfach Dijkstra abzubrechen, wenn \( t \) aus \( Q \) entfernt wird. Das spart ``im Schnitt'' die Hälfte des Scans.
+
+\subsection{Bidirektionale Suche}
+
+Idee ist hier, abwechselnd von \( s \) und \( t \) aus zu suchen. Von \( s \) aus sucht man auf \( G = (V,E) \), von \( t \) aus auf dem zugehörigen \emph{Rückwärtsgraphen} \( G^r = (V,E^r) \).
+
+Die vorläufige kürzeste Distanz wird in jedem Schritt gespeichert:
+\begin{equation*}
+  d[s,t] = \min\left \{ d[s,t],d_\text{forward}[u] + d_\text{backward}[u] \right \}
+\end{equation*}
+
+Abgebrochen wird, wenn die Suche einen Knoten scannt, der in die andere Richtung bereits gescannt wurde.
+
+\subsection{\( A^\ast \)-Suche}
+
+Idee der \( A^\ast \)-Suche ist es, ``in die Richtung'' des Ziels zu suchen. Dazu benötigen wir eine Funktion \( f(v) \), die für alle \( v \in V \) die eigentliche Funktion \( \mu(v,t) \) schätzen kann.
+
+Anschließend können wir \( \text{pot}(v) = f(v) \) setzen und \( \overline{c}(u,v) = c(u,v) + f(v) - f(u) \).
+
+\( f(v) \) muss diese Eigenschaften haben:
+\begin{itemize}
+  \item \textbf{Konsistenz}: \( c(e) + f(v) \geq f(u) \) (\( \forall e = (u,v) \)). 
+
+  Die reduzierten Kosten dürfen also nicht negativ sein.
+
+  \item \( f(v) \leq \mu(v,t) \) (\( \forall v \in V \)).
+
+  Dann ist \( f(t) = 0 \) und wir können aufhören wenn \( t \) aus \( Q \) entfernt wird.
+\end{itemize}
+
+Ist \( p \) ein beliebiger Pfad von \( s \) nach \( t \), so ist \( d[t] \leq c(p) \) (alle Kanten auf \( p \) seien relaxiert). Wie finden wir jetzt aber so eine Funktion \( f(v) \)?
+
+Wir benötigen eine Heuristik für \( f(v) \).
+
+\begin{itemize}
+  \item Betrachtet man eine Strecke im Straßennetzwerk, so kann \( f(v) \) beispielsweise der euklidische Abstand \( \left\Vert v - t \right\Vert_2 \) sein. Damit erhält man eine deutliche, aber keine überragende Beschleunigung.
+  \item \term{Landmarks}\index{Landmarks} sind deutlich geeigneter, benötigen allerdings Vorberechnung.
+
+  Man wähle eine \emph{Landmarkmenge} \( L \). Berechne und speichere \( \mu(v,l) \) für alle \( l \in L, v \in V \).
+
+  Während einer Query suche man jetzt ein Landmark \( l \in L \) ``hinter'' dem Ziel und benutze die untere Schranke
+  \begin{equation*}
+    f_l(v) = \mu(v,l) - \mu(t,l)
+  \end{equation*}
+  \emph{Vorteile} sind, dass Landmarks konzeptuell einfach sind, eine erhebliche Beschleunigung bringen (um den Faktor 20) und mit anderen Techniken kombinierbar sind.
+
+  \emph{Allerdings} ist die Landmarkauswahl schwierig und der Platzverbrauch sehr groß (besonders für große \( V \)).
+\end{itemize}
