@@ -1,6 +1,7 @@
 \chapter{Approximationsalgorithmen}
 
-\paragraph{Suchprobleme}
+\section{Suchprobleme}
+
 \begin{itemize}
   \item Für Probleminstanz $ I \in M_I $ gibt es Menge $ M_S(I) $ möglicher Lösungen $ S \in M_S(I) $
   \item \textbf{Zielfunktion} $ f: \bigcup_{I \in M_I} M_S(I) \to \R_+ $
@@ -12,7 +13,8 @@
   \item \textbf{Maximierungsproblem}: analog
 \end{itemize}
 
-\paragraph{Suchprobleme --- Approximation}
+\subsection{Approximation}
+
 \begin{itemize}
   \item Lösungen $ S $ mit $ f(S) = f^*(I) $ oft schwer zu finden (z.B. \textbf{NP}-schwer)
   \item \textbf{Auswege}:
@@ -29,7 +31,8 @@
   \end{itemize}
 \end{itemize}
 
-\paragraph{Job Scheduling}
+\section{Job Scheduling}
+
 \begin{itemize}
   \item \textbf{Problem}: $ m $ Maschinen sollen $ n $ Jobs abarbeiten, möglichst alle gleichzeitig fertig
   \begin{itemize}
@@ -50,7 +53,8 @@
   \end{itemize}
 \end{itemize}
 
-\paragraph{Turing-Reduzierbarkeit}
+\section{Turing-Reduzierbarkeit}
+
 \begin{itemize}
   \item \textbf{Definition}: Suchproblem $ \Pi $ \emph{\textbf{NP}-schwer} oder \emph{\textbf{NP}-hart}, falls ein \textbf{NP}-vollständiges Entscheidungsproblem $ L $ existiert mit $ L \leq_T^p \Pi $, d.h.
   \begin{itemize}
@@ -60,7 +64,8 @@
   \end{itemize}
 \end{itemize}
 
-\paragraph{Allgemeines Travelling Salesman-Problem}
+\section{Allgemeines Travelling Salesman-Problem}
+
 \begin{itemize}
   \item \textbf{Probleminstanz}: Graph $ G = (V, E \coloneqq V \times V) $, Längenfunktion $ c: E \to \Z_+ $
   \item \textbf{Zielfunktion} für Permutation $ \pi $ von $ V $:
@@ -71,7 +76,8 @@
   \item \textbf{Gesucht}: Permutation $ \pi $ mit minimalem $ f(\pi) = f^*(G,c) $
 \end{itemize}
 
-\paragraph{Allgemeines TSP --- Approximation}
+\subsection{Approximation}
+
 \begin{itemize}
   \item \textbf{Gegeben}:
   \begin{itemize}
@@ -83,7 +89,8 @@
   \item \textbf{Satz}: Für jedes $ a \geq 1 $ ist TSP-$ a $-Approximations-Suchproblem \textbf{NP}-hart.
 \end{itemize}
 
-\paragraph{Entscheidungsproblem --- Hamiltonkreis}
+\section{Entscheidungsproblem --- Hamiltonkreis}
+
 \begin{itemize}
   \item \textbf{Probleminstanz}: Graph $ G = (V,E) $
   \item \textbf{Frage}: Gibt es Hamilton-Kreis in $ G $?
@@ -93,7 +100,8 @@
   \item Problem ist \textbf{NP}-vollständig
 \end{itemize}
 
-\paragraph{Metrisches TSP}
+\section{Metrisches TSP}
+
 \begin{itemize}
   \item \textbf{Definition}: Wie TSP, aber \emph{Dreiecksungleichung} wird von $ c $ verlangt:
   \begin{equation*}
@@ -102,7 +110,8 @@
   \item \textbf{Satz}: Für Instanzen des Problems kann man in Polynomialzeit eine $ 2 $-Approximation berechnen
 \end{itemize}
 
-\paragraph{Pseudopolynomielle Laufzeit}
+\section{Pseudopolynomielle Laufzeit}
+
 \begin{itemize}
   \item \textbf{Laufzeitabhängigkeit}: Laufzeit $ t(I) $ für Eingabe $ I $ abhängig von \emph{Größe} $ n(I) $ der Repräsentation von $ I $
   \item \textbf{Binäre Codierung}: Codierung von $ k \in \N $ braucht $ n(I) = \bm{n_2(I)} = \Theta(\log_2 k) $ Bits
@@ -122,7 +131,8 @@
   \end{itemize}
 \end{itemize}
 
-\paragraph{Knapsack}
+\section{Knapsack}
+
 \begin{itemize}
   \item \textbf{Probleminstanz}:
   \begin{itemize}
@@ -189,7 +199,8 @@
   \end{itemize}
 \end{itemize}
 
-\paragraph{(Voll) Polynomielle Approximationsschemata}
+\section{(Voll) Polynomielle Approximationsschemata}
+
 \begin{itemize}
   \item \textbf{Vorgaben}:
   \begin{itemize}
@@ -227,9 +238,7 @@
   \item Jedes FPTAS ist PTAS, aber nicht umgekehrt
 \end{itemize}
 
-\newpage
-
-\paragraph{Knapsack --- FPTAS}
+\subsection{Knapsack --- FPTAS}
 \begin{itemize}
   \item \textbf{Implementierung}:
   \begin{pseudocode}

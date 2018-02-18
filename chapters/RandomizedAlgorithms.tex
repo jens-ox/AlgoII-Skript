@@ -2,14 +2,16 @@
 
 \newcommand{\E}{\text{\textbf{E}}}
 
-\paragraph{Neue Grundlagen}
+\section{Neue Grundlagen}
+
 \begin{itemize}
   \item \textbf{Zufallszahlen}: $ \text{\code{randInt}}(c : \N) $ liefere zufälliges $ n \in \{ 0, 1, \dots, c-1 \} $
   \item \textbf{Nichtdeterminismus}: Mehrere Ausführungen des \emph{gleichen} randomisierten Algorithmus für \emph{gleiche} Eingabe evtl. verschieden!
   \item \textbf{Zufallsvariablen}: Für feste Eingabe sind Laufzeit, Speicherplatzbedarf, Ergebnis Zufallsvariablen
 \end{itemize}
 
-\paragraph{Recap Wahrscheinlichkeitstheorie}
+\section{Recap Wahrscheinlichkeitstheorie}
+
 \begin{itemize}
   \item \textbf{Elementareregnisse}: Menge $ \Omega $
   \item \textbf{$ \sigma $-Algebra}: Menge von Ereignissen $ E \subseteq 2^\Omega $ (Potenzmenge von $ \Omega $)
@@ -46,7 +48,8 @@
   \item \textbf{Indikator-Zufallsvariable}: $ 0 $ und $ 1 $ einzig mögliche Funktionswerte
 \end{itemize}
 
-\paragraph{Ausführung randomisierter Algorithmen}
+\section{Ausführung randomisierter Algorithmen}
+
 \begin{itemize}
   \item randomisierter Algorithmus $ R $, Eingabe $ x $
   \item $ \Omega = \{ \text{``Programmlauf'' von } R \text{ für Eingabe } x \} $
@@ -71,7 +74,8 @@
   \end{itemize}
 \end{itemize}
 
-\paragraph{Markov-/Chebyshev-Ungleichung}
+\section{Markov-/Chebyshev-Ungleichung}
+
 \begin{itemize}
   \item \textbf{Markov}: ZV $ Y \geq 0 $, Erwartungswert $ \mu_Y $. Dann gilt $ \forall t,k \in \R_+ $:
   \begin{equation*}
@@ -83,7 +87,8 @@
   \end{equation*}
 \end{itemize}
 
-\paragraph{Chernoff-Schranken}
+\section{Chernoff-Schranken}
+
 \begin{itemize}
   \item $ X_1, \dots, X_n $ unabhängige Indikator-ZV mit $ \Pr(X_i = 1) = p_i $
   \item $ X = \sum_{i=1}^nX_i $ und $ \mu = \E(X) = \sum p_i $
@@ -105,7 +110,8 @@
   \end{equation*}
 \end{itemize}
 
-\paragraph{Und-Oder-Bäume}
+\section{Und-Oder-Bäume}
+
 \begin{itemize}
   \item \textbf{Aufbau}: $ T_k $ vollständiger binärer Baum, Höhe $ 2k $
   \begin{itemize}
@@ -129,7 +135,8 @@
   \item \textbf{Satz}: Für jede randomisierte UOB-Auswertung gilt: Für \emph{jede} Folge $ x_1, \dots, x_{4^k} $ ist Erwartungswert für die Anzahl besuchter Blätter $ \leq 3^k = n^{\log_4 3} \approx n^{0.792\dots} $. Das ist beweisbar optimal.
 \end{itemize}
 
-\paragraph{Erd\H{o}s-Rényi-Zufallsgraphen}
+\section{Erd\H{o}s-Rényi-Zufallsgraphen}
+
 \begin{itemize}
   \item \textbf{Initialisierung}: $ G = (\{ 1, \dots, n \}, \varnothing) $
   \item \textbf{Aufbauen}:
