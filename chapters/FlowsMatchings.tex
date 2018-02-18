@@ -186,3 +186,72 @@ entfernt. Formal ist das
 \end{equation*}
 
 Die Laufzeit des Dinic-Algorithmus ist damit in \( O(mn^2) \).
+
+\section{Matchings}
+
+Ein \term{Matching}\index{Matching} in einem ungerichteten Graphen \( G = (V, E) \) ist eine Teilmenge der Kanten, sodass es keine Kanten gibt, die einen gemeinsamen Knoten berühren.
+
+Ein Matching ist \emph{maximal}, wenn es keine Kante gibt, die man aus \( E \) zum Matching hinzufügen könnte, ohne die Matching-Anforderung zu verletzen.
+
+Ein Matching hat \emph{maximale Kardinalität}, wenn es kein Matching auf \( G \) gibt, dass mehr Knoten abdeckt.
+
+Wir werden Matchings zuerst einmal verwenden, um Flüsse zu berechnen.
+
+\section{Preflow-Push}
+
+Nachteil der pfadaugmentierenden Algorithmen von vorhin ist, dass man Pfade mit hoher Kapazität sehr häufig durchgehen muss aufgrund von späteren Kanten mit geringer Kapazität.
+
+\term{Preflow-Push-Algorithmen}\index{Preflow-Push-Algorithmus} lösen dieses Problem.
+
+\begin{definition}[Preflow]
+  Ein \term{Preflow}\index{Preflow} ist ein Fluss \( f \), bei dem die Summe der eingehenden Flüsse für einen Knoten höher sein darf als die Summe der ausgehenden Flüsse. Die Differenz dieser Summen nennen wir den \term{Exzess}\index{Exzess} des Knotens:
+  \begin{equation*}
+    \text{excess}(v) \coloneqq \underbrace{\sum_{(u,v) \in E} f_{(u,v)}}_{\text{inflow}} - \underbrace{\sum_{(v,w) \in E} f_{(v,w)}}_{\text{outflow}} \geq 0\text{.}
+  \end{equation*}
+  Wir nennen einen Knoten \( v \in V \setminus \left \{ s, t \right \} \) \term{aktiv}, falls \( \text{excess}(v) > 0 \).
+\end{definition}
+
+Wir definieren nun die \code{push}\index{Push}-Funktion:
+
+\begin{pseudocode}
+  \textbf{\textsc{push}}\( (e = (v,w), \delta) \) \\
+  \phantom{\enskip} \textbf{assert} \( \delta > 0 \) \\
+  \phantom{\enskip} \textbf{assert} \(  \text{excess}(v) \geq \delta \) \\
+  \phantom{\enskip} \textbf{assert} residual capacity of \( e \geq \delta \) \\
+  \phantom{\enskip} \( \text{excess}(v) \minuseq \delta \) \\
+  \phantom{\enskip} \( \text{excess}(w) \pluseq \delta \) \\
+  \phantom{\enskip} \textbf{if} \( e \) is reverse edge \textbf{then} \( f(\text{reverse}(e)) \minuseq \delta \) \\
+  \phantom{\enskip} \textbf{else} \( f(e) \pluseq \delta \)
+\end{pseudocode}
+
+Wir nennen einen Push
+\begin{itemize}
+  \item \term{saturierend}\index{Push!saturierend}, falls \( \delta = c_e^f \),
+  \item \term{nicht-saturierend}\index{Push!nicht saturierend}, falls \( \delta < c_e^f \).
+\end{itemize}
+
+\subsection{Level-Funktion}
+
+Idee ist nun, von \( s \) aus Richtung \( t \) zu pushen. Dazu benötigen wir eine Approximation \( d(v) \) der BFS-Distanz von \( v \) zu \( t \) in \( G_f \).
+
+Wir können nun den Preflow-Push-Algorithmus implementieren:
+
+\begin{pseudocode}
+  \textbf{\textsc{genericPreflowPush}}\( (G = (V, E), f) \) \\
+  \phantom{\enskip} \textbf{forall} \( e = (s,v) \in E \) \textbf{do} \( \text{push}(e, c(e)) \) \\
+  \phantom{\enskip} \( d(s) \coloneqq n \), \( d(v) = 0 \) for all other nodes \\
+  \phantom{\enskip} \textbf{while} \( \exists \ v \in V \setminus \left \{ s, t \right \} : \text{excess}(v) > 0 \) \textbf{do} \\
+  \phantom{\enskip} \phantom{\enskip} \textbf{if} \( \exists \ e = (v,w) \in E_f : D(w) < d(v) \) \textbf{then} \enskip \textcolor{gray}{// eligible edge} \\
+  \phantom{\enskip} \phantom{\enskip} \phantom{\enskip} choose some \( \delta \leq \min \left \{ \text{excess}(v), c_e^f \right \} \) \\
+  \phantom{\enskip} \phantom{\enskip} \phantom{\enskip} \( \text{push}(e,\delta) \) \enskip \textcolor{gray}{// no new steep edges} \\
+  \phantom{\enskip} \phantom{\enskip} \textbf{else} \( d(v) \)++ \enskip \textcolor{gray}{// relabel; no new steep edges}
+  \phantom{\enskip}
+\end{pseudocode}
+
+Dieser generische Algorithmus hat eine Laufzeit von \( O(n^3) \). 
+
+\subsection{Highest Level Preflow Push}
+
+Wählt man immer die aktiven Knoten aus, die \( d(v) \) maximieren, so kann man die Laufzeit auf \( O(n^2\sqrt{m}) \) drücken.
+
+Mit heuristischen Mitteln wie agressivem lokalen Relabeling lässt sich der practical case weiter reduzieren.
