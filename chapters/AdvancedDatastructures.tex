@@ -11,7 +11,7 @@ Wir werden uns in diesem Kapitel mit Prioritätslisten beschäftigen. Es gibt no
 
 \section{Adressierbare Prioritätslisten}
 
-Eine \term{adressierbare Prioritätsliste}\index{Adressierbare Prioritätsliste} muss folgene Funktionen implementieren:
+Eine \term{adressierbare Prioritätsliste}\index{Adressierbare Prioritätsliste} muss folgende Funktionen implementieren:
 
 \begin{pseudocode}
   \begin{tabular}{ll}
@@ -72,22 +72,13 @@ Wir verwenden folgende grundlegende Operationen zur Bearbeitung solcher Wälder:
   \( d = \left\langle \infty,\ldots,\infty \right\rangle \) \\
   \( d[s] = 0 \) \\
   \textcolor{gray}{// Startknoten zu PQ hinzufügen.} \\
-  \( Q\text{.insert}(s) \)
+  \( Q\text{.insert}(s) \) \\
+  \textbf{while} \( Q \neq \varnothing \) \textbf{do} \\
+  \phantom{\enskip} \( u \coloneqq Q\text{.deleteMin} \) \\
+  \phantom{\enskip} \textbf{for all} \( (u,n) \in E \) \textbf{do} \\
+  \phantom{\enskip} \phantom{\enskip} \textbf{if} \( n \not \in Q \) \textbf{then} \( Q\text{.insert}(n) \) \\
+  \phantom{\enskip} \phantom{\enskip} \textbf{if} \( d[n] > d[u] + c(u,n) \) \textbf{then} \( d[n] = d[u] + c(u,n) \) \\
 \end{pseudocode}
-
-\begin{itemize}
-  \item \( d = \left\langle \infty,\ldots,\infty \right\rangle \)
-  
-  Zu Beginn ist die Distanz zu jedem Knoten \( \infty \).
-
-  \item \( \text{parent}[s] = s \), \( d(s) = 0 \)
-  
-  Der Startknoten wird initialisiert.
-
-  \item \( Q\text{.insert}(s) \) 
-
-  Prioritätsliste wird mit Startknoten initialisiert.
-\end{itemize}
 
 \section{Pairing Heaps}
 
@@ -121,7 +112,7 @@ Einige Funktionalitäten lassen sich gut veranschaulichen:
 \begin{minipage}{.475\textwidth}
   \begin{figure}[H]
     \includegraphics[width=0.5\textwidth]{NewTree}
-    \caption{\code{newTree}: Element \( e \) wird hinzugefügt (ggf. auch ein ganzer Baum) und --- falls nötig --- der \code{minPtr} angepasst}
+    \caption{\code{newTree}: Element \( e \) wird hinzugefügt (ggf.\ auch ein ganzer Baum) und --- falls nötig --- der \code{minPtr} angepasst}
   \end{figure}
 \end{minipage}
 \hfill
@@ -150,7 +141,7 @@ Meistens speichert man Pairing Heaps als doppelt verkettete Liste der Wurzeln. D
 \subsection{Analyse}
 
 \begin{itemize}
-  \item \code{insert} und \code{deleteMin} gehen in \( O(1) \).
+  \item \code{insert} und \code{merge} gehen in \( O(1) \).
   \item \code{deleteMin} und \code{remove} gehen jeweils in \( O(\log n) \) amortisiert.
   \item \code{decreaseKey} ist schwieriger zu analysieren, geht aber amortisiert in \( O(\log\log n) \leq T \leq O(\log n) \) und ist in der Praxis sehr schnell.
 \end{itemize}
@@ -161,7 +152,7 @@ Wir werden als nächstes \emph{Fibonacci-Heaps} verwenden, um noch mehr Leistung
 
 Mithilfe von Fibonacci-Heaps erhalten wir eine amortisierte Komplexität von \( O(\log n) \) für \code{deleteMin} und \( O(1) \) für alle anderen Operationen.
 
-Fibonacci-Heaps speichern ein paar Zusatzinformationen pro Knoten ab, wodurch neue Hilfsfunktionen kreiert werden könnnen, die diese Beschleunigung ermöglichen:
+Fibonacci-Heaps speichern ein paar Zusatzinformationen pro Knoten ab, wodurch neue Hilfsfunktionen kreiert werden können, die diese Beschleunigung ermöglichen:
 
 \begin{itemize}
   \item \textbf{Rank} eines Knotens: Anzahl direkter Kinder
