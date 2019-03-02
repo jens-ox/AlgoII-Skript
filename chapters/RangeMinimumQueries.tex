@@ -25,6 +25,7 @@ Hierzu betrachtet man die größtmöglichen Knoten, die vollständig im Abfragei
 
 \begin{figure}[H]
   \includegraphics[width=0.6\textwidth]{rmqBST}
+  \captionsetup{width=.7\textwidth}
   \caption{Die grauen Felder stellen die Knoten des binären Suchbaums dar, sie beinhalten die Position des Arrays, an der der Teilbaum, dessen Wurzel sie sind, den minimalen Wert annimmt. Die größten Knoten, die vollständig im Intervall liegen, sind grün markiert.}
 \end{figure}
 
@@ -40,7 +41,7 @@ Idee ist es nun, \( \text{rmq}_A(l,r) \) aus der Überdeckung des Intervalls dur
 Wir suchen dafür \( 2^{\lfloor l - r \rfloor} \), also die größte Zweierpotenz, die kleiner ist als die Länge des Intervalls. Offensichtlich ist diese Zweierpotenz mehr als halb so groß wie das Intervall, also ist \( \text{rmq}_A(l,r) \) entweder das Minimum der ersten oder zweiten überdeckenden Zweierpotenz.
 
 \begin{figure}[H]
-  \includegraphics[width=0.6\textwidth]{rmqVersion2}
+  \includegraphics[width=0.5\textwidth]{rmqVersion2}
   \caption{Funktionsweise des zweiten rmq-Algorithmus}
 \end{figure}
 
@@ -102,7 +103,7 @@ der \term{lowest common Ancestor}\index{lowest common ancestor} der Knoten \( v,
 \end{itemize}
 
 \begin{figure}[H]
-  \includegraphics[width=0.6\textwidth]{LCA}
+  \includegraphics[width=0.5\textwidth]{LCA}
   \caption{lowest common ancestor der Knoten \( h \) und \( j \) ist \( e \)}
 \end{figure}
 
@@ -162,6 +163,7 @@ Wir verwenden folgende Konstuktion:
 
   \begin{figure}[H]
     \includegraphics[width=0.8\textwidth]{DFSLCA}
+    \captionsetup{width=.8\textwidth}
     \caption{Konstruktion des kartesischen Baums mit Dummy-Blättern (blau) für das Array ``463514645236''. Anschließend wird die Klammernfolge gebildet. In blau hervorgehoben sind die ``Wendepunkte'', also die Dummy-Blätter, und ihr Index}
   \end{figure}
 

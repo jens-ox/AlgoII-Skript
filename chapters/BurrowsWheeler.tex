@@ -14,6 +14,7 @@ Sei \( T = \texttt{lalalangng\$} \) der gegebene String (mit angehängtem \$-Zei
 
 \begin{figure}[H]
   \includegraphics[width=0.7\textwidth]{BWT}
+  \captionsetup{width=.7\textwidth}
   \caption{Konstruktion der Burrows-Wheler-Transformation von \( T = \texttt{lalalangng\$}  \), \( T^{\text{BWT}} = \texttt{gllnn\$ aga} \). Da \( T^{\text{BWT}} \) die letzte Spalte ist schreibt man oft auch \( L \) stattdessen. Die erste Spalte wird auch \( F \) genannt}
 \end{figure}
 
@@ -43,8 +44,6 @@ Folgende Eigenschaften lassen sich feststellen:
     \includegraphics[width=\textwidth]{BWTSorting}
   \end{figure}
 \end{minipage}
-
-\clearpage
 
 Diese Art der Rücktransformation benötigt \( O(n^2\log n) \) Schritte. Im Folgenden werden wir die Rücktransformation auf Linearzeit reduzieren. Dazu benötigen wir \term{Last-to-front mapping}\index{Last-to-front mapping}:
 \begin{equation*}
@@ -87,7 +86,7 @@ Wir können desweiteren folgende Beobachtungen an \( T^{\text{BWT}} \) machen:
     \includegraphics[width=\textwidth]{BWTBack}
     \caption{Präfixe \( \alpha \) und \( \beta \) und wie sie in der Matrix vorkommen}
   \end{figure}
-\end{minipage}
+\end{minipage} \\
 
 Wir können also \( LF \) rein aus \( T^{\text{BWT}} \) berechnen. Dazu brauchen wir nur zwei Hilfsfunktionen:
 
@@ -118,7 +117,7 @@ Zuerst berechnen wir LF. Hier sieht die Implementierung so aus:
 \end{enumerate}
 
 \begin{figure}[H]
-  \includegraphics[width=0.6\textwidth]{BWTBackLinear}
+  \includegraphics[width=0.5\textwidth]{BWTBackLinear}
   \caption{Beispiel des Algorithmus zur Berechnung von LF nach Durchführung}
 \end{figure}
 
@@ -168,8 +167,6 @@ Idee der \term{MTF-Kodierung}\index{Kodierung!MTF} ist es, lokale Redundanz zu n
   \caption{Es wurde hier gerade die \texttt{4} eingefügt und deswegen \texttt{l} in \( Y \) nach vorne genommen. Als nächstes muss \texttt{l} codiert (\( \cong \texttt{1} \)) und \( Y \) anschließend nicht verändert werden, weil \texttt{l} ja eh schon ganz vorne steht}
 \end{figure}
 
-\clearpage
-
 \subsection{Huffman-Kodierung}
 
 Die \term{Huffman-Kodierung}\index{Kodierung!Huffman} erzeugt präfixfreie Codes variabler Länge. Der Ablauf ist:
@@ -182,7 +179,8 @@ Die \term{Huffman-Kodierung}\index{Kodierung!Huffman} erzeugt präfixfreie Codes
 \end{enumerate}
 
 \begin{figure}[H]
-  \includegraphics[width=0.6\textwidth]{Huffman}
+  \includegraphics[width=0.5\textwidth]{Huffman}
+  \captionsetup{width=.5\textwidth}
   \caption{MTF-Kodierung \( R \) von \( T \), die Häufigkeit der in \( R \) vorkommenden Symbole und die mit dem Huffman-Baum erzeugten Codes}
 \end{figure}
 

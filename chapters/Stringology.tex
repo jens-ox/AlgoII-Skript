@@ -65,13 +65,15 @@ Idee dieses Algorithmus ist es, das Pattern eleganter nach vorne zu verschieben,
 Für einen String \( S \) mit Länge \( k \) sei \( \alpha(S) \) die Länge des Längsten Präfixes von \( S_{1\dots k-1} \), das auch Suffix von \( S_{2\dots k} \) ist.\footnote{Wir lassen absichtlich bei Betrachtung des Präfixes den letzten und bei Betrachtung des Suffixes den ersten Buchstaben weg, damit \( \alpha(S) = 0 \) ist, wenn \( \left\vert S \right\vert = k = 1 \) ist.} 
 
 \begin{figure}[H]
-  \includegraphics[width=0.7\textwidth]{KMP}
+  \includegraphics[width=.5\textwidth]{KMP}
+  \captionsetup{width=.5\textwidth}
   \caption{Idee beim Verschieben des Patterns: \( \alpha \) wurde bereits gematcht. Früher als mit dem bereits gematchten Suffix kann das nächste Vorkommen von \( P \) nicht auftauchen, also kann mann \( P \) direkt um \( j - 1 - \alpha \) verschieben}
 \end{figure}
 
 Der Algorithmus besteht aus zwei Teilen:
 \begin{enumerate}
   \item \textbf{Border-Array berechnen} (\( O(m) \)). Damit die oben erläuterten Verschiebungen nachher effizient durchgeführt werden können, berechnen wir für das leere Wort \emph{und} jeden Buchstaben in \( P \) einen \( \alpha \)-Wert. Diese Werte ergeben das \term{Border-Array}\label{def:borderArray}\index{Border-Array}:
+
   \begin{minipage}{.55\textwidth}
     \begin{equation*}
       \text{border}[j] = \begin{cases}
@@ -86,7 +88,7 @@ Der Algorithmus besteht aus zwei Teilen:
       \includegraphics[width=.8\textwidth]{borderArray}
       \caption{Beispiel für das Border-Array eines Patterns}
     \end{figure}
-  \end{minipage}
+  \end{minipage} \\
 
   \item \textbf{Pattern matchen} (\( O(n) \)). Nun verwenden wir das erstellte Border-Array, um Vorkommnisse von \( P \) in \( T \) zu finden. Wir starten sowohl im Text als auch im Pattern an Position 1 und fangen an zu matchen. Kommt es an Position \( 1 \leq j \leq m \) des Patterns zu einem Mismatch, so können wir \( P \) direkt um \( j - \text{border}[j] - 1 \) verschieben. In Pseudocode sieht das so aus:
   \begin{pseudocode}
@@ -240,12 +242,13 @@ Noch anschaulicher, allerdings wesentlich platzverbrauchender, sind \term{Suffix
     \includegraphics[width=.8\textwidth]{suffixTree}
     \caption{Beispiel für den Suffix-Baum des Strings ``\emph{banana}''}
   \end{figure}
-\end{minipage}
+\end{minipage} \\
 
 ``Naiv'' ist die Erstellung des Suffixbaums in \( O(n^2) \). Man kann ihn aber auch aus Suffix-Array und LCP-Array in Linearzeit konstruieren. Dazu hängt man die Suffixe sukzessive in der Tiefe ein, die ihr LCP-Wert angibt:
 
 \begin{figure}[H]
-  \includegraphics[width=0.8\textwidth]{buildSuffixTree}
+  \includegraphics[width=.8\textwidth]{buildSuffixTree}
+  \captionsetup{width=.8\textwidth}
   \caption{Sukzessive Konstruktion des Suffix-Baums aus Suffix- und LCP-Array. Zuerst hängt man \$ und das erste Suffix (dessen LCP-Wert immer \( 0 \) ist) an die Wurzel. Anschließend nutzt man den LCP-Wert des darauffolgenden Suffixes (hier \( 1 \)), um festzulegen, wo der Suffix zum Baum hinzugefügt werden muss (durch Pfeile gekennzeichnet)}
 \end{figure}
 
@@ -304,5 +307,6 @@ Die \term{Lempel-Ziv-Kompression}\index{Kompression!Lempel-Ziv} baut das Wörter
 
 \begin{figure}[H]
   \includegraphics[width=0.4\textwidth]{LZCompress}
+  \captionsetup{width=.6\textwidth}
   \caption{Beispiel für das Bilden der Lempel-Ziv-Kompression des Wortes ``\emph{abracadabra}''. Der Baum wird \emph{on the fly} berechnet und nicht übergeben, sondern nur die komprimierte Information und das Alphabet}
 \end{figure}
